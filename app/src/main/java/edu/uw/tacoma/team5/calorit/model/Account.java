@@ -1,12 +1,16 @@
 package edu.uw.tacoma.team5.calorit.model;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
 /**
- * This is a model class for user account.
+ * This is a model class for user account table.
  * Qing Bai
  * 2016/04/24
  */
@@ -41,7 +45,7 @@ public class Account {
      * This is getter for mEmail
      * @return email address of the account
      */
-    public String getmEmail() {
+    public String getEmail() {
         return mEmail;
     }
 
@@ -49,7 +53,7 @@ public class Account {
      * This is a setter for mEmail
      * @param mEmail is used to set email address of the account
      */
-    public void setmEmail(String mEmail) {
+    public void setEmail(String mEmail) {
         this.mEmail = mEmail;
     }
 
@@ -57,7 +61,7 @@ public class Account {
      * This is a getter for mPassword
      * @return password of the account
      */
-    public String getmPassword() {
+    public String getPassword() {
         return mPassword;
     }
 
@@ -65,28 +69,27 @@ public class Account {
      * This is a setter for mPassword
      * @param mPassword is used to set password of the account
      */
-    public void setmPassword(String mPassword) {
+    public void setPassword(String mPassword) {
         this.mPassword = mPassword;
     }
 
-//    /**
-//     * This parses a given json string and fills the list with the accounts parsed from the string.
-//     * @param accountJSON is the given JSON string
-//     * @param accountList is the list to save the accounts from the JSON string
-//     */
-//    public static void parseAccountJSON(String accountJSON, List<Account> accountList) {
-//        String reason = null;
-//
-//        if (accountJSON != null) {
-//            try {
-//                JSONArray array = new JSONArray(accountJSON);
-//
-//                for (int i = 0; i < array.length(); i++) {
-//                    accountList.add(new Account(array.get(i)));
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+    /**
+     * This parses a given json string and uses it to create an account instance.
+     * @param accountJSON is the given JSON string
+     * @return an account instance created from the JSON string
+     */
+    public static Account parseAccountJSON(String accountJSON) {
+        Account account = null;
+
+        if (accountJSON != null) {
+            try {
+                JSONObject accountJsonObj = new JSONObject(accountJSON);
+                account =  new Account(accountJsonObj.getString(Account.EMAIL), accountJsonObj.getString(Account.PASSWORD));
+            } catch (JSONException e) {
+                Log.e("Account", "Unable to parse data, Reason: " + e.getMessage());
+            }
+        }
+
+        return account;
+    }
 }
