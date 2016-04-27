@@ -10,5 +10,8 @@
     <string name="loggedin">loggedin</string>
     <string name="loggedin_email">loggedin_email</string>
     <string name="title_activity_home">Home</string>
-    <string name="logout">log out</string>
+    <string name="logout">Log out</string>
+    <string name="logout_dialog_message">Do you want to log out?</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
 </resources>

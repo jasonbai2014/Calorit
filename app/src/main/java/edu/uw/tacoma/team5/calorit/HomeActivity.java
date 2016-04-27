@@ -1,16 +1,20 @@
 package edu.uw.tacoma.team5.calorit;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -32,13 +36,34 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.logout) {
-            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.login_prefs),
-                    Context.MODE_PRIVATE);
-            sharedPreferences.edit().putBoolean(getString(R.string.loggedin), false).commit();
-            sharedPreferences.edit().putString(getString(R.string.loggedin_email), null).commit();
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setMessage(getString(R.string.logout_dialog_message));
 
-            startActivity(new Intent(this, LogInActivity.class));
-            finish();
+            dialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.login_prefs),
+                            Context.MODE_PRIVATE);
+                    sharedPreferences.edit().putBoolean(getString(R.string.loggedin), false).commit();
+                    sharedPreferences.edit().putString(getString(R.string.loggedin_email), null).commit();
+
+                    startActivity(new Intent(HomeActivity.this, LogInActivity.class));
+                    HomeActivity.this.finish();
+                }
+            });
+
+            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // do nothing
+                }
+            });
+
+            AlertDialog dialog = dialogBuilder.create();
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+            dialog.show();
             return true;
         }
 

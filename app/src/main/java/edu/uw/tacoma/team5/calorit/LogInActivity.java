@@ -3,6 +3,9 @@ package edu.uw.tacoma.team5.calorit;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -56,7 +59,7 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     public void signIn(String email, String password) {
-        if (credentialCheck(email, password)) {
+        if (isConnectedToNetwork() && credentialCheck(email, password)) {
             mIntent = new Intent(this, HomeActivity.class);
             mSharedPreferences.edit().putBoolean(getString(R.string.loggedin), true).commit();
             mSharedPreferences.edit().putString(getString(R.string.loggedin_email),email).commit();
@@ -66,7 +69,7 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     public void signUp(String email, String password) {
-        if (credentialCheck(email, password)) {
+        if (isConnectedToNetwork() && credentialCheck(email, password)) {
             mIntent = new Intent(this, BodyInfoActivity.class);
             mSharedPreferences.edit().putBoolean(getString(R.string.loggedin), true).commit();
             mSharedPreferences.edit().putString(getString(R.string.loggedin_email),email).commit();
@@ -89,6 +92,22 @@ public class LogInActivity extends AppCompatActivity {
         }
 
         return query.toString();
+    }
+
+    private boolean isConnectedToNetwork() {
+        boolean result = false;
+
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            result = true;
+        } else {
+            Toast.makeText(this, "No network connection available. Cannot provide services",
+                    Toast.LENGTH_LONG).show();
+        }
+
+        return result;
     }
 
     private boolean credentialCheck(String email, String password) {
