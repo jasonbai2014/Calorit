@@ -14,14 +14,8 @@ public class BodyInfo {
     /**
      * The keys that are used to get height, weight, age, gender, and bmr from JSON
      */
-    public static final String EMAIL = "email", HEIGHT_FEET = "heightFeet",
-            HEIGHT_INCHES = "heightInches", WEIGHT = "weight", AGE = "age",
-            GENDER = "gender", BMR = "bmr";
-
-    /**
-     * Email address of the user who has this body information.
-     */
-    private String mEmail;
+    public static final String HEIGHT_FEET = "heightFeet", HEIGHT_INCHES = "heightInches",
+            WEIGHT = "weight", AGE = "age", GENDER = "gender", BMR = "bmr";
 
     /**
      * Feet portion of user's height
@@ -56,7 +50,6 @@ public class BodyInfo {
     /**
      * This is constructor of this class.
      *
-     * @param mEmail is email of the user
      * @param mHeightFeet is feet portion of the user's height
      * @param mHeightInches is inches portion of the user's height
      * @param mWeight is weight of the user
@@ -64,32 +57,13 @@ public class BodyInfo {
      * @param mGender is gender of the user
      * @param mBmr is basal metabolic rate of the user
      */
-    public BodyInfo(String mEmail, int mHeightFeet, int mHeightInches, int mWeight, int mAge, String mGender, int mBmr) {
-        this.mEmail = mEmail;
+    public BodyInfo(int mHeightFeet, int mHeightInches, int mWeight, int mAge, String mGender, int mBmr) {
         this.mHeightFeet = mHeightFeet;
         this.mHeightInches = mHeightInches;
         this.mWeight = mWeight;
         this.mAge = mAge;
         this.mGender = mGender;
         this.mBmr = mBmr;
-    }
-
-    /**
-     * This is getter for mEmail
-     *
-     * @return email address of the user
-     */
-    public String getEmail() {
-        return mEmail;
-    }
-
-    /**
-     * This is setter for mEmail
-     *
-     * @param mEmail is email address
-     */
-    public void setEmail(String mEmail) {
-        this.mEmail = mEmail;
     }
 
     /**
@@ -211,8 +185,7 @@ public class BodyInfo {
         if (bodyInfoJSON != null) {
             try {
                 JSONObject bodyInfoJsonObj = new JSONObject(bodyInfoJSON);
-                bodyInfo = new BodyInfo(bodyInfoJsonObj.getString(BodyInfo.EMAIL),
-                Integer.valueOf(bodyInfoJsonObj.getString(BodyInfo.HEIGHT_FEET)),
+                bodyInfo = new BodyInfo(Integer.valueOf(bodyInfoJsonObj.getString(BodyInfo.HEIGHT_FEET)),
                         Integer.valueOf(bodyInfoJsonObj.getString(BodyInfo.HEIGHT_INCHES)),
                         Integer.valueOf(bodyInfoJsonObj.getString(BodyInfo.WEIGHT)),
                         Integer.valueOf(bodyInfoJsonObj.getString(BodyInfo.AGE)),
