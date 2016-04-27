@@ -12,4 +12,53 @@
     tools:context="edu.uw.tacoma.team5.calorit.HomeActivity"
     tools:showIn="@layout/activity_home">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calories Left: "
+        android:id="@+id/textView" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="false"
+        android:layout_centerInParent="true">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter a Meal"
+            android:id="@+id/button_enter_meal"
+            android:layout_gravity="center_horizontal"
+            android:onClick="enterMeal" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check Meal Log"
+            android:id="@+id/button_check_meal_log"
+            android:layout_gravity="center_horizontal"
+            android:onClick="checkMealLog" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Body Information"
+            android:id="@+id/button_edit_body_info"
+            android:layout_gravity="center_horizontal"
+            android:onClick="editBodyInfo" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log Out"
+            android:id="@+id/button_log_out"
+            android:layout_gravity="center_horizontal"
+            android:onClick="logout" />
+    </LinearLayout>
+    <!-- bring in the mCaloriesLeft field -->
+
 </RelativeLayout>

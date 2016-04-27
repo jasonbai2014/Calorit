@@ -205,7 +205,7 @@ public class BodyInfo {
      * @param bodyInfoJSON is the given JSON string
      * @return a BodyInfo instance created from the JSON string
      */
-    public static BodyInfo parseBodyInfoJSON(String bodyInfoJSON) {
+    public static BodyInfo parseBodyInfoJSON(String bodyInfoJSON) { // shouldn't this return a string??
         BodyInfo bodyInfo = null;
 
         if (bodyInfoJSON != null) {
