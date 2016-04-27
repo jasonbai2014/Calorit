@@ -4,6 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/login_activity"
-    android:background="@color/colorBlue"
+    android:background="@color/colorBlack"
     tools:context="edu.uw.tacoma.team5.calorit.LogInActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/logo"/>
+
 </FrameLayout>

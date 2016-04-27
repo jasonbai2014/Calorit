@@ -37,10 +37,17 @@ public class LogInActivity extends AppCompatActivity {
         if (mSharedPreferences.getBoolean(getString(R.string.loggedin), false)) {
             startActivity(new Intent(this, HomeActivity.class));
             finish();
+        } else {
+            new android.os.Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getSupportFragmentManager().beginTransaction().add(R.id.login_activity,
+                            new SignInFragment()).commit();
+                }
+            }, 3000);
         }
-
-        getSupportFragmentManager().beginTransaction().add(R.id.login_activity,
-                new SignInFragment()).commit();
+//        getSupportFragmentManager().beginTransaction().add(R.id.login_activity,
+//                new SignInFragment()).commit();
     }
 
     public void switchToSignUpFragment() {
