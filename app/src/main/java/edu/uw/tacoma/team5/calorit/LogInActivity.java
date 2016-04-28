@@ -40,7 +40,7 @@ public class LogInActivity extends AppCompatActivity {
         if (mSharedPreferences.getBoolean(getString(R.string.loggedin), false)) {
             startActivity(new Intent(this, HomeActivity.class));
             finish();
-        } else {
+        } else if (savedInstanceState == null){
             new android.os.Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -61,8 +61,6 @@ public class LogInActivity extends AppCompatActivity {
     public void signIn(String email, String password) {
         if (isConnectedToNetwork() && credentialCheck(email, password)) {
             mIntent = new Intent(this, HomeActivity.class);
-            mSharedPreferences.edit().putBoolean(getString(R.string.loggedin), true).commit();
-            mSharedPreferences.edit().putString(getString(R.string.loggedin_email),email).commit();
             AccountTask task = new AccountTask();
             task.execute(buildURL(email, password, LOGIN_URL));
         }
@@ -71,8 +69,6 @@ public class LogInActivity extends AppCompatActivity {
     public void signUp(String email, String password) {
         if (isConnectedToNetwork() && credentialCheck(email, password)) {
             mIntent = new Intent(this, BodyInfoActivity.class);
-            mSharedPreferences.edit().putBoolean(getString(R.string.loggedin), true).commit();
-            mSharedPreferences.edit().putString(getString(R.string.loggedin_email),email).commit();
             AccountTask task = new AccountTask();
             task.execute(buildURL(email, password, SIGNUP_URL));
         }
@@ -178,6 +174,9 @@ public class LogInActivity extends AppCompatActivity {
                 if (status.equals("success")) {
                     Toast.makeText(getApplicationContext(), jsonObject.get("message").toString()
                             , Toast.LENGTH_LONG).show();
+                    mSharedPreferences.edit().putBoolean(getString(R.string.loggedin), true).commit();
+                    mSharedPreferences.edit().putString(getString(R.string.loggedin_email),
+                            jsonObject.get("email").toString()).commit();
                     startActivity(mIntent);
                     LogInActivity.this.finish();
                 } else {

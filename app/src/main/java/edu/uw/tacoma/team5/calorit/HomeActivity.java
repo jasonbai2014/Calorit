@@ -61,8 +61,6 @@ public class HomeActivity extends AppCompatActivity {
             });
 
             AlertDialog dialog = dialogBuilder.create();
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-
             dialog.show();
             return true;
         }
