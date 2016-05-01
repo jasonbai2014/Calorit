@@ -24,6 +24,18 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (savedInstanceState == null) {
+            HomeFragment homeFragment = new HomeFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.home_activity,
+                    homeFragment).commit();
+        }
+    }
+
+    public void viewMealLog() {
+        MealLogFragment mealLogFragment = new MealLogFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.home_activity,
+                mealLogFragment).addToBackStack(null).commit();
     }
 
     @Override

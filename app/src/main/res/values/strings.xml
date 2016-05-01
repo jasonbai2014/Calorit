@@ -14,4 +14,8 @@
     <string name="logout_dialog_message">Do you want to log out?</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
+    <string name="calories_left_textview">Calories Left</string>
+    <string name="enter_meal_btn">Enter Meal</string>
+    <string name="meal_log_btn">Meal Log</string>
+    <string name="edit_body_info_btn">Edit Body Info</string>
 </resources>
