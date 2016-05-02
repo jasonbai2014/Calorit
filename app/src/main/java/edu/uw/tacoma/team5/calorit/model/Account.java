@@ -1,13 +1,11 @@
 package edu.uw.tacoma.team5.calorit.model;
 
 import android.util.Log;
-import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+import edu.uw.tacoma.team5.calorit.MealLogFragment;
 
 /**
  * This is a model class for user account table.
@@ -93,3 +91,4 @@ public class Account {
         return account;
     }
 }
+
