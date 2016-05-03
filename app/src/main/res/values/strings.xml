@@ -21,7 +21,10 @@
     <string name="edit_gender_hint">Enter gender</string>
     <string name="edit_bmr_hint">Enter BMR</string>
     <string name="save_body_info_btn_text">Save</string>
-
+    <string name="calories_left_textview">Calories Left</string>
+    <string name="enter_meal_btn">Enter Meal</string>
+    <string name="meal_log_btn">Meal Log</string>
+    <string name="edit_body_info_btn">Edit Body Info</string>
 
 
 

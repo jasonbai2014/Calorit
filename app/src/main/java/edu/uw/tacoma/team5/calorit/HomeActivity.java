@@ -1,6 +1,5 @@
 package edu.uw.tacoma.team5.calorit;
 
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,18 +10,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-import edu.uw.tacoma.team5.calorit.model.MealLog;
-
-public class HomeActivity extends AppCompatActivity
-        implements MealLogFragment.OnListFragmentInteractionListener {
+public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,22 +25,22 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        new android.os.Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getSupportFragmentManager().beginTransaction().add(R.id.home_activity,
-                        new HomeFragment()).commit();
-            }
-        }, 3000);
-
+        if (savedInstanceState == null) {
+            HomeFragment homeFragment = new HomeFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.home_activity,
+                    homeFragment).commit();
+        }
     }
 
-    public void startMealLog(){
+    public void viewMealLog() {
         MealLogFragment mealLogFragment = new MealLogFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_home, mealLogFragment)
-                .addToBackStack(null)
-                .commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.home_activity,
+                mealLogFragment).addToBackStack(null).commit();
+    }
+
+    public void editBodyInfo() {
+        Intent i = new Intent(this, BodyInfoActivity.class);
+        startActivity(i);
     }
 
     @Override
@@ -84,28 +78,11 @@ public class HomeActivity extends AppCompatActivity
             });
 
             AlertDialog dialog = dialogBuilder.create();
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-
             dialog.show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void checkMealLog(View v){
-        new android.os.Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getSupportFragmentManager().beginTransaction().add(R.id.home_activity,
-                        new MealLogFragment()).commit();
-            }
-        }, 3000);
-    }
-
-    @Override
-    public void onListFragmentInteraction(MealLog mealLog) {
-
     }
 }
 

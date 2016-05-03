@@ -1,61 +1,72 @@
 package edu.uw.tacoma.team5.calorit.model;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Created by Levi on 4/26/2016.
- */
+
 public class MealLog {
+    public static final String LOG_DATE = "logDate", CALORIES_CONSUMED = "caloriesConsumed",
+        CALORIES_BURNED = "caloriesBurned";
 
-    public static final String CALORIES_CONSUMED = "caloriesConsumed", TODAYS_DATE = "logDate";
+    private String mLogDate;
+    private int mCaloriesConsumed;
+    private int mCaloriesBurned;
 
-    private int calsConsumed;
-    private String todaysDate;
-
-    public MealLog(int calsConsumed, String todaysDate) {
-        this.calsConsumed = calsConsumed;
-        this.todaysDate = todaysDate;
+    public MealLog(String mLogDate, int mCaloriesConsumed, int mCaloriesBruned) {
+        this.mLogDate = mLogDate;
+        this.mCaloriesConsumed = mCaloriesConsumed;
+        this.mCaloriesBurned = mCaloriesBruned;
     }
 
-    public int getCalsConsumed() {
-        return calsConsumed;
+    public String getmLogDate() {
+        return mLogDate;
     }
 
-    public void setCalsConsumed(int calsConsumed) {
-        this.calsConsumed = calsConsumed;
+    public void setmLogDate(String mLogDate) {
+        this.mLogDate = mLogDate;
     }
 
-    public String getTodaysDate() {
-        return todaysDate;
+    public int getmCaloriesConsumed() {
+        return mCaloriesConsumed;
     }
 
-    public void setTodaysDate(String todaysDate) {
-        this.todaysDate = todaysDate;
+    public void setmCaloriesConsumed(int mCaloriesConsumed) {
+        this.mCaloriesConsumed = mCaloriesConsumed;
     }
 
-    public static String parseMealLogJSON(String mealLogJSON, List<MealLog> mealLogList) {
+    public int getmCaloriesBurned() {
+        return mCaloriesBurned;
+    }
+
+    public void setmCaloriesBurned(int mCaloriesBruned) {
+        this.mCaloriesBurned = mCaloriesBruned;
+    }
+
+    public static String parseMealLogJSON(String mealLogJSON, List<MealLog> logs) {
         String reason = null;
 
         if (mealLogJSON != null) {
             try {
                 JSONArray arr = new JSONArray(mealLogJSON);
+
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject obj = arr.getJSONObject(i);
-                    MealLog mealLog = new MealLog(obj.getInt(MealLog.CALORIES_CONSUMED), obj.getString(MealLog.TODAYS_DATE));
-                    mealLogList.add(mealLog);
+
+                    MealLog log = new MealLog(obj.getString(MealLog.LOG_DATE), Integer.valueOf(obj.getString(MealLog.CALORIES_CONSUMED)),
+                            Integer.valueOf(obj.getString(MealLog.CALORIES_BURNED)));
+                    logs.add(log);
                 }
             } catch (JSONException e) {
                 reason =  "Unable to parse data, Reason: " + e.getMessage();
             }
         }
-
         return reason;
     }
 }

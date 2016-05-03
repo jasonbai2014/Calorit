@@ -2,6 +2,7 @@ package edu.uw.tacoma.team5.calorit.model;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -184,7 +185,9 @@ public class BodyInfo {
 
         if (bodyInfoJSON != null) {
             try {
-                JSONObject bodyInfoJsonObj = new JSONObject(bodyInfoJSON);
+                JSONArray arr = new JSONArray(bodyInfoJSON);
+                JSONObject bodyInfoJsonObj = arr.getJSONObject(0);
+
                 bodyInfo = new BodyInfo(Integer.valueOf(bodyInfoJsonObj.getString(BodyInfo.HEIGHT_FEET)),
                         Integer.valueOf(bodyInfoJsonObj.getString(BodyInfo.HEIGHT_INCHES)),
                         Integer.valueOf(bodyInfoJsonObj.getString(BodyInfo.WEIGHT)),

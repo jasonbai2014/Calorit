@@ -2,6 +2,7 @@ package edu.uw.tacoma.team5.calorit.model;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -81,7 +82,9 @@ public class Account {
 
         if (accountJSON != null) {
             try {
-                JSONObject accountJsonObj = new JSONObject(accountJSON);
+                JSONArray arr = new JSONArray(accountJSON);
+                JSONObject accountJsonObj = arr.getJSONObject(0);
+
                 account =  new Account(accountJsonObj.getString(Account.EMAIL), accountJsonObj.getString(Account.PASSWORD));
             } catch (JSONException e) {
                 Log.e("Account", "Unable to parse data, Reason: " + e.getMessage());

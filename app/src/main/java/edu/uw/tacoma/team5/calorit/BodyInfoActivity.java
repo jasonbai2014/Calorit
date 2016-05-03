@@ -174,22 +174,12 @@ public class BodyInfoActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.
             Log.v("string result:", result);
-            try {
-                JSONObject jsonObject = new JSONObject(result);
-                String status = (String) jsonObject.get("result");
-                if (status.equals("success")) {
-                    Toast.makeText(getApplicationContext(), jsonObject.get("message").toString()
-                            , Toast.LENGTH_LONG).show();
-                    startActivity(mIntent);
-                    BodyInfoActivity.this.finish();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Failed! " + jsonObject.get("error")
-                            , Toast.LENGTH_LONG).show();
-                }
-            } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Something is wrong with the data" +
-                        e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+
+            Toast.makeText(getApplicationContext(), "Body information saved"
+                    , Toast.LENGTH_LONG).show();
+            startActivity(mIntent);
+            BodyInfoActivity.this.finish();
+
         }
     }
 
