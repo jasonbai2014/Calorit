@@ -16,8 +16,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * This is an activity from HomeFragment and MealLogFragment
+ *
+ * Qing Bai
+ * Levi Bingham
+ * 2016/05/04
+ */
 public class HomeActivity extends AppCompatActivity {
 
+    /**
+     * This sets HomeFragment for its initial UI
+     *
+     * @param savedInstanceState is saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,12 +44,18 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This switches from HomeFragment to MealLogFragment.
+     */
     public void viewMealLog() {
         MealLogFragment mealLogFragment = new MealLogFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.home_activity,
                 mealLogFragment).addToBackStack(null).commit();
     }
 
+    /**
+     * This switches from HomeActivity to EditBodyActivity
+     */
     public void editBodyInfo() {
         Intent i = new Intent(this, BodyInfoActivity.class);
         startActivity(i);
@@ -50,6 +68,12 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * This sets up a logout item in the menu and a alert dialog when user tries to log out
+     *
+     * @param item is the menu item that was selected.
+     * @return false to allow normal menu processing to proceed, true to consume it here.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.logout) {

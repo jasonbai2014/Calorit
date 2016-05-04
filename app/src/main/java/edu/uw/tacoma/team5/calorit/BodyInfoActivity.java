@@ -25,18 +25,59 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+/**
+ * This class handles the interaction of editing or entering body information about the user.
+ * The user can enter all the information asked for and if it is their first time (ie. they just
+ * created an account) then it will insert a new row in the database. If they are editing their
+ * information it will update their row in the database.
+ *
+ * Qing Bai
+ * Levi Bingham
+ * 2016/05/04
+ */
 public class BodyInfoActivity extends AppCompatActivity {
-
+    /**
+     * String representation of the server's php file to interact with the BodyInfo table in the database.
+     */
     private static final String BODY_INFO_URL = "http://cssgate.insttech.washington.edu/~_450atm5/bodyinfo.php?";
+
+    /**
+     * EditTexts used in the UI for the user to enter information about their body.
+     */
     private EditText mHeightFeetEditText, mHeightInchesEditText, mWeightEditText,
             mAgeEditText, mGenderEditText;
+
+    /**
+     * Button used to submit the user's information to the database.
+     */
     private Button mSaveBodyInfoButton;
+
+    /**
+     * Integer fields used to store the user's information that they enter.
+     */
     private int mHeightFeet, mHeightInches, mWeight, mAge, mBmr;
+
+    /**
+     * String field to store the user's gender information that they enter.
+     */
     private String mGender;
+
+    /**
+     * Intent object used to move between relevant acitivities.
+     */
     private Intent mIntent;
+
+    /**
+     * SharedPreferences object used to get the current user's email address to build a URL.
+     */
     private SharedPreferences mSharedPreferences;
 
-
+    /**
+     * Assigns all the UI elements to their relative fields in the class. Also sets onClickListener
+     * for the save button to begin the process of saving body info.
+     *
+     * @param savedInstanceState is a bundle used to pass through the saved instance state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -62,6 +103,14 @@ public class BodyInfoActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * Checks to make sure that the input entered is the same type that was expected and that they
+     * are within the acceptable ranges. If there is something wrong an error message will pop up
+     * in a toast saying so.
+     *
+     * @returns true if input is same type as expected and within accepted ranges. False otherwise.
+     */
     private boolean isInputValid() {
         boolean result = true;
 
@@ -101,7 +150,10 @@ public class BodyInfoActivity extends AppCompatActivity {
         return result;
     }
 
-
+    /**
+     * Calculates the user's bmr, and sends the user back to the HomeActivity. Also starts the
+     * background task for updating the database and builds a URL to do so.
+     */
     public void processSaveBodyInfo(){
 
         if(isConnectedToNetwork() && isInputValid()){
@@ -118,6 +170,12 @@ public class BodyInfoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks to see if there is a network connection. If not there is a toast message that pops
+     * up saying so.
+     *
+     * @returns true if there is a network connection, false otherwise.
+     */
     private boolean isConnectedToNetwork() {
         boolean result = false;
 
@@ -134,6 +192,12 @@ public class BodyInfoActivity extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * Appends the body information to the end of the url that is passed in.
+     *
+     * @param url is the location of the php file on the server that is used to interact with the database.
+     * @returns String representation of the URL with the appended information.
+     */
     private String buildURL(String url) {
         StringBuilder query = new StringBuilder(url);
 
@@ -160,7 +224,10 @@ public class BodyInfoActivity extends AppCompatActivity {
         return query.toString();
     }
 
-
+    /**
+     * Class used for starting an asynchronous task to communicate with the server. This will allow
+     * the user to keep using the app without having to wait for a potentially slow network connection.
+     */
     private class BodyInfoTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -191,6 +258,11 @@ public class BodyInfoActivity extends AppCompatActivity {
             return response;
         }
 
+        /**
+         * This pops up a toast showing whether or not user's body info has been saved in the server.
+         *
+         * @param result is a string from doInBackground()
+         */
         @Override
         protected void onPostExecute(String result) {
             if (result.startsWith("Unable to")) {

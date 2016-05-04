@@ -28,20 +28,63 @@ import edu.uw.tacoma.team5.calorit.model.MealLog;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * This is a fragment for home UI.
+ *
+ * Qing Bai
+ * Levi Bingham
+ * 2016/05/04
  */
 public class HomeFragment extends Fragment {
+    /**
+     * Location of php file on server for querying body info
+     */
     private static final String BODY_INFO_URL = "http://cssgate.insttech.washington.edu/~_450atm5/querybodyinfo.php?";
 
+    /**
+     * BodyInfo object to store the body info pulled from the server.
+     */
     private BodyInfo mBodyInfo;
+
+    /**
+     * SharedPreferences object used for knowing if the user is logged in and it also has user's
+     * email.
+     */
     private SharedPreferences mSharedPerferences;
+
+    /**
+     * String used to store the current user's email for URL building
+     */
     private String mCurrentUser;
 
+    /**
+     * TextView used to show how many calories the user has left for the day.
+     */
     private TextView mCaloriesTextView;
+
+    /**
+     * Button used to enter a meal that the user has eaten or is about to eat.
+     */
     private Button mEnterMealBtn;
+
+
+    /**
+     * Button used to access the EditBodyInfoActivity to edit the user's information.
+     */
     private Button mEditBodyInfoBtn;
+
+    /**
+     * Button used to view the user's log of meals.
+     */
     private Button mMealLogBtn;
 
+    /**
+     * Gets the user's email and stores it in the mCurrentUser field. Assigns the fragment's UI elements to the
+     * relevant fields. Also starts a background task after building a URL to download this user's body information.
+     * Also assigns onClickListeners to the UI buttons.
+     * @param inflater used to inflate the fragment
+     * @param container used to pass into the inflater
+     * @param savedInstanceState is a bundle used to determine what the saved instance state is.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,6 +126,10 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Appends the user's email to the URL of the server's php file for querying bodyinfo table in the database.
+     * @returns String representation of the URL of the server's php file with the user's email appended to the end.
+     */
     private String buildURL() {
         StringBuilder query = new StringBuilder(BODY_INFO_URL);
 
@@ -96,6 +143,9 @@ public class HomeFragment extends Fragment {
         return query.toString();
     }
 
+    /**
+     * Class for background task of downloading body info on a different thread.
+     */
     private class DownloadBodyInfoTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
@@ -126,6 +176,10 @@ public class HomeFragment extends Fragment {
             return response;
         }
 
+        /**
+         * Saves the downloaded body information into a BodyInfo object and sets the calories remaining view
+         * to the user's bmr.
+         */
         @Override
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.
