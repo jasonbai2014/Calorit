@@ -10,8 +10,18 @@ import edu.uw.tacoma.team5.calorit.model.MealLog;
 
 import java.util.List;
 
+/**
+ * This is an adapter for the recycler view used in the MealLogFragment
+ *
+ * Qing Bai
+ * Levi Bingham
+ * 2016/05/04
+ */
 public class MyMealLogRecyclerViewAdapter extends RecyclerView.Adapter<MyMealLogRecyclerViewAdapter.ViewHolder> {
 
+    /**
+     * This is a list holding meal log
+     */
     private final List<MealLog> mValues;
 
     public MyMealLogRecyclerViewAdapter(List<MealLog> items) {
@@ -25,6 +35,12 @@ public class MyMealLogRecyclerViewAdapter extends RecyclerView.Adapter<MyMealLog
         return new ViewHolder(view);
     }
 
+    /**
+     * This sets up content shown in each item of the recycler view
+     *
+     * @param holder is holder view for a meal log
+     * @param position is position in the list
+     */
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);

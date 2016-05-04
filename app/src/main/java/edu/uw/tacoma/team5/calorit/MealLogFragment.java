@@ -26,16 +26,32 @@ import java.util.List;
 import edu.uw.tacoma.team5.calorit.model.MealLog;
 
 /**
- * A fragment representing a list of Items.
- * <p>
- * interface.
+ * A fragment representing a list of meal log.
+ *
+ * Qing Bai
+ * Levi Bingham
+ * 2016/05/04
  */
 public class MealLogFragment extends Fragment {
 
+    /**
+     * This is a url used to query meal log data from the server
+     */
     private static final String MEAL_LOG_URL = "http://cssgate.insttech.washington.edu/~_450atm5/meallog.php?";
 
+    /**
+     * This is a view showing a list of meal logs
+     */
     private RecyclerView mRecyclerView;
+
+    /**
+     * This saves user's username
+     */
     private SharedPreferences mSharedPerferences;
+
+    /**
+     * This is current user's email (username)
+     */
     private String mCurrentUser;
 
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -50,6 +66,11 @@ public class MealLogFragment extends Fragment {
 //        return fragment;
 //    }
 
+    /**
+     * This creates this fragment and gets current user's email from sharedPreferences
+     *
+     * @param savedInstanceState is saved state
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +84,14 @@ public class MealLogFragment extends Fragment {
         mCurrentUser = mSharedPerferences.getString(getString(R.string.loggedin_email), null);
     }
 
+    /**
+     * This downloads data from the server and show them in the view.
+     *
+     * @param inflater is inflater
+     * @param container is container
+     * @param savedInstanceState is saved state
+     * @return view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -84,6 +113,11 @@ public class MealLogFragment extends Fragment {
         return view;
     }
 
+    /**
+     * This builds a url query sent to the server
+     *
+     * @return built url
+     */
     private String buildURL() {
         StringBuilder query = new StringBuilder(MEAL_LOG_URL);
 
@@ -97,6 +131,9 @@ public class MealLogFragment extends Fragment {
         return query.toString();
     }
 
+    /**
+     * This is a class used to communicate with the server and download meal log
+     */
     private class DownloadMealLogTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
@@ -127,6 +164,12 @@ public class MealLogFragment extends Fragment {
             return response;
         }
 
+        /**
+         * This received data from the server and creates a list of meal logs which is sent to the
+         * adapter
+         *
+         * @param result is a string from doInBackground()
+         */
         @Override
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.
