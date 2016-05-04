@@ -14,9 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -64,18 +61,21 @@ public class BodyInfoActivity extends AppCompatActivity {
     }
 
     public void gatherInformation(){
-        if(allFieldsHaveData()){
+        if(validateInput()) {
             mHeightFeet = Integer.parseInt(mHeightFeetEditText.getText().toString());
             mHeightInches = Integer.parseInt(mHeightInchesEditText.getText().toString());
             mWeight = Integer.parseInt(mWeightEditText.getText().toString());
             mAge = Integer.parseInt(mAgeEditText.getText().toString());
             mBmr = Integer.parseInt(mBMREditText.getText().toString());
             mGender = mGenderEditText.getText().toString();
+        } else{
+            Toast.makeText(this, "Something wrong with input",
+                    Toast.LENGTH_LONG).show();
         }
     }
 
 
-    private boolean allFieldsHaveData(){
+    private boolean validateInput(){
         if(mHeightFeetEditText.getText().toString().equals("") ||
                 mHeightInchesEditText.getText().toString().equals("")||
                 mWeightEditText.getText().toString().equals("")||
@@ -84,12 +84,29 @@ public class BodyInfoActivity extends AppCompatActivity {
                 mBMREditText.getText().toString().equals("")){
             return false;
         }
+
+        try {
+
+            Integer.parseInt(mHeightFeetEditText.getText().toString());
+            Integer.parseInt(mHeightInchesEditText.getText().toString());
+            Integer.parseInt(mWeightEditText.getText().toString());
+            Integer.parseInt(mAgeEditText.getText().toString());
+            Integer.parseInt(mBMREditText.getText().toString());
+            String temp = mGenderEditText.getText().toString();
+
+            if(!temp.equalsIgnoreCase("m") && !temp.equalsIgnoreCase("f") &&
+                    !temp.equalsIgnoreCase("male") && !temp.equalsIgnoreCase("female")){
+                throw new Exception();
+            }
+        } catch (Exception e){
+            return false;
+        }
         return true;
     }
 
     public void processSaveBodyInfo(){
         gatherInformation();
-        if(isConnectedToNetwork()){
+        if(isConnectedToNetwork() && validateInput()){
 
             BodyInfoTask task = new BodyInfoTask();
             task.execute(buildURL(BODY_INFO_URL));
