@@ -123,11 +123,11 @@ public class LogInActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter your password.", Toast.LENGTH_LONG).show();
             result = false;
         } else if (password.length() > 20) {
-            Toast.makeText(this, "Please enter a valid password (less than twenty characters).",
+            Toast.makeText(this, "Please enter a valid password (less than 20 characters).",
                     Toast.LENGTH_LONG).show();
             result = false;
         } else if (password.length() < 10) {
-            Toast.makeText(this, "Please enter a valid password (more than ten characters).",
+            Toast.makeText(this, "Please enter a valid password (more than 10 characters).",
                     Toast.LENGTH_LONG).show();
             result = false;
         }
@@ -167,7 +167,12 @@ public class LogInActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            // Something wrong with the network or the URL.
+            if (result.startsWith("Unable to")) {
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }
+
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 String status = (String) jsonObject.get("result");

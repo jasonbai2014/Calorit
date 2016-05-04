@@ -14,6 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,7 +29,7 @@ public class BodyInfoActivity extends AppCompatActivity {
 
     private static final String BODY_INFO_URL = "http://cssgate.insttech.washington.edu/~_450atm5/bodyinfo.php?";
     private EditText mHeightFeetEditText, mHeightInchesEditText, mWeightEditText,
-            mAgeEditText, mGenderEditText, mBMREditText;
+            mAgeEditText, mGenderEditText;
     private Button mSaveBodyInfoButton;
     private int mHeightFeet, mHeightInches, mWeight, mAge, mBmr;
     private String mGender;
@@ -48,7 +51,6 @@ public class BodyInfoActivity extends AppCompatActivity {
         mWeightEditText = (EditText) findViewById(R.id.weight_edit_text);
         mAgeEditText = (EditText) findViewById(R.id.age_edit_text);
         mGenderEditText = (EditText) findViewById(R.id.gender_edit_text);
-        mBMREditText = (EditText) findViewById(R.id.bmr_edit_text);
 
         mSaveBodyInfoButton = (Button) findViewById(R.id.save_body_info_button);
 
@@ -60,57 +62,59 @@ public class BodyInfoActivity extends AppCompatActivity {
         });
     }
 
-    public void gatherInformation(){
-        if(validateInput()) {
+    private boolean isInputValid() {
+        boolean result = true;
+
+        try {
             mHeightFeet = Integer.parseInt(mHeightFeetEditText.getText().toString());
             mHeightInches = Integer.parseInt(mHeightInchesEditText.getText().toString());
             mWeight = Integer.parseInt(mWeightEditText.getText().toString());
             mAge = Integer.parseInt(mAgeEditText.getText().toString());
-            mBmr = Integer.parseInt(mBMREditText.getText().toString());
             mGender = mGenderEditText.getText().toString();
-        } else{
-            Toast.makeText(this, "Something wrong with input",
-                    Toast.LENGTH_LONG).show();
-        }
-    }
 
-
-    private boolean validateInput(){
-        if(mHeightFeetEditText.getText().toString().equals("") ||
-                mHeightInchesEditText.getText().toString().equals("")||
-                mWeightEditText.getText().toString().equals("")||
-                mAgeEditText.getText().toString().equals("")||
-                mGenderEditText.getText().toString().equals("")||
-                mBMREditText.getText().toString().equals("")){
-            return false;
-        }
-
-        try {
-
-            Integer.parseInt(mHeightFeetEditText.getText().toString());
-            Integer.parseInt(mHeightInchesEditText.getText().toString());
-            Integer.parseInt(mWeightEditText.getText().toString());
-            Integer.parseInt(mAgeEditText.getText().toString());
-            Integer.parseInt(mBMREditText.getText().toString());
-            String temp = mGenderEditText.getText().toString();
-
-            if(!temp.equalsIgnoreCase("m") && !temp.equalsIgnoreCase("f") &&
-                    !temp.equalsIgnoreCase("male") && !temp.equalsIgnoreCase("female")){
-                throw new Exception();
+            if (mHeightFeet < 0 || mHeightFeet > 7) {
+                Toast.makeText(this, "Plase enter a valid height in feet", Toast.LENGTH_LONG).show();
+                mHeightFeetEditText.requestFocus();
+                result = false;
+            } else if (mHeightInches < 0 || mHeightInches > 12) {
+                Toast.makeText(this, "Please enter a valid height in inches", Toast.LENGTH_LONG).show();
+                mHeightInchesEditText.requestFocus();
+                result = false;
+            } else if (mWeight <= 0) {
+                Toast.makeText(this, "Please enter a positive number for weight", Toast.LENGTH_LONG).show();
+                mWeightEditText.requestFocus();
+                result = false;
+            } else if (mAge < 0 && mAge > 100) {
+                Toast.makeText(this, "Please enter a valid age", Toast.LENGTH_LONG).show();
+                mAgeEditText.requestFocus();
+                result = false;
+            } else if (!(mGender.equalsIgnoreCase("m") || mGender.equalsIgnoreCase("f"))) {
+                Toast.makeText(this, "Please enter a valid gender", Toast.LENGTH_LONG).show();
+                mGenderEditText.requestFocus();
+                result = false;
             }
-        } catch (Exception e){
-            return false;
+        } catch (NumberFormatException e) {
+            result = false;
+            Toast.makeText(this, "Please make sure you enter a number", Toast.LENGTH_LONG).show();
         }
-        return true;
+
+        return result;
     }
+
 
     public void processSaveBodyInfo(){
-        gatherInformation();
-        if(isConnectedToNetwork() && validateInput()){
 
+        if(isConnectedToNetwork() && isInputValid()){
+
+            if (mGender.equalsIgnoreCase("F")) {
+                mBmr = (int) (655 + 4.35 * mWeight + 4.7 * (mHeightFeet * 12 + mHeightInches) - 4.7 * mAge);
+             } else {
+                mBmr = (int) (66 + 6.23 * mWeight + 12.7 * (mHeightFeet * 12 + mHeightInches) - 6.8 * mAge);
+            }
+
+            mIntent = new Intent(this, HomeActivity.class);
             BodyInfoTask task = new BodyInfoTask();
             task.execute(buildURL(BODY_INFO_URL));
-            mIntent = new Intent(this, HomeActivity.class);
         }
     }
 
@@ -189,14 +193,29 @@ public class BodyInfoActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            // Something wrong with the network or the URL.
-            Log.v("string result:", result);
+            if (result.startsWith("Unable to")) {
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }
 
-            Toast.makeText(getApplicationContext(), "Body information saved"
-                    , Toast.LENGTH_LONG).show();
-            startActivity(mIntent);
-            BodyInfoActivity.this.finish();
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                String status = (String) jsonObject.get("result");
 
+                if (status.equals("success")) {
+                    Toast.makeText(getApplicationContext(), jsonObject.get("message").toString()
+                            , Toast.LENGTH_LONG).show();
+                    startActivity(mIntent);
+                    BodyInfoActivity.this.finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Failed! " + jsonObject.get("error")
+                            , Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException e) {
+                Toast.makeText(getApplicationContext(), "Something wrong with the data " +
+                        e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         }
     }
 
