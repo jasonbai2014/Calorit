@@ -23,13 +23,39 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+/**
+ * This is the activity that holds signin and signup fragment
+ *
+ * Qing Bai
+ * Levi Bingham
+ * 2016/05/04
+ */
 public class LogInActivity extends AppCompatActivity {
-
+    /**
+     * This is a URL used to communicate with login php file
+     */
     private static final String LOGIN_URL = "http://cssgate.insttech.washington.edu/~_450atm5/login.php?";
+
+    /**
+     *  This is a URL used to communicate with signup php file
+     */
     private static final String SIGNUP_URL = "http://cssgate.insttech.washington.edu/~_450atm5/signup.php?";
+
+    /**
+     * This is an intent that determines where this activity heads to when sign in or create account button is clicked
+     */
     private Intent mIntent;
+
+    /**
+     * This is used to save data such as user's account or whether a user has logged in
+     */
     private SharedPreferences mSharedPreferences;
 
+    /**
+     * This sets up this activity's initial UI
+     *
+     * @param savedInstanceState has saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,15 +75,23 @@ public class LogInActivity extends AppCompatActivity {
                 }
             }, 3000);
         }
-//        getSupportFragmentManager().beginTransaction().add(R.id.login_activity,
-//                new SignInFragment()).commit();
     }
 
+    /**
+     * This allows user to shift from the sign in fragment to sign up fragment when sign up button
+     * is clicked.
+     */
     public void switchToSignUpFragment() {
         getSupportFragmentManager().beginTransaction().replace(R.id.login_activity,
                 new SignUpFragment()).addToBackStack(null).commit();
     }
 
+    /**
+     * This allows user to sign in
+     *
+     * @param email is user's email
+     * @param password is user's password
+     */
     public void signIn(String email, String password) {
         if (isConnectedToNetwork() && credentialCheck(email, password)) {
             mIntent = new Intent(this, HomeActivity.class);
@@ -66,6 +100,12 @@ public class LogInActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This allows user to sign up an account
+     *
+     * @param email is user's email
+     * @param password is user's password
+     */
     public void signUp(String email, String password) {
         if (isConnectedToNetwork() && credentialCheck(email, password)) {
             mIntent = new Intent(this, BodyInfoActivity.class);
@@ -74,6 +114,14 @@ public class LogInActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This builds a URL that is used in the async task
+     *
+     * @param email is user's email
+     * @param password is user's password
+     * @param url is one of the url constants
+     * @return a url query with the email and password
+     */
     private String buildURL(String email, String password, String url) {
         StringBuilder query = new StringBuilder(url);
 
@@ -90,6 +138,11 @@ public class LogInActivity extends AppCompatActivity {
         return query.toString();
     }
 
+    /**
+     * Checks whether or not this app connects to the Internet
+     *
+     * @return true if it connects to the Internet. Otherwise, false
+     */
     private boolean isConnectedToNetwork() {
         boolean result = false;
 
@@ -106,6 +159,13 @@ public class LogInActivity extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * Checks whether or not user's inputs are valid
+     *
+     * @param email is user's email
+     * @param password is user's password
+     * @return true if everything is valid. Otherwise, false
+     */
     private boolean credentialCheck(String email, String password) {
         boolean result = true;
 
@@ -135,6 +195,9 @@ public class LogInActivity extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * This is a class used to communicate with the server
+     */
     private class AccountTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -165,6 +228,11 @@ public class LogInActivity extends AppCompatActivity {
             return response;
         }
 
+        /**
+         * This shows message from the server and switches to another activity from this activity
+         *
+         * @param result is result from doInBackground()
+         */
         @Override
         protected void onPostExecute(String result) {
             if (result.startsWith("Unable to")) {

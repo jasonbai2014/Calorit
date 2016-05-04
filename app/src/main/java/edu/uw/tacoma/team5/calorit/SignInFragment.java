@@ -9,14 +9,41 @@ import android.widget.Button;
 import android.widget.EditText;
 
 /**
- * A simple {@link Fragment} subclass.
+ * This is a fragment for sign in UI
+ *
+ * Qing Bai
+ * Levi Bingham
+ * 2016/05/04
  */
 public class SignInFragment extends Fragment {
+    /**
+     * it's an edit text field for user name
+     */
     private EditText mUsername;
+
+    /**
+     * it's an edit text field for user password
+     */
     private EditText mPassword;
+
+    /**
+     * This is sign in button
+     */
     private Button mSignInBtn;
+
+    /**
+     * This is sign up button
+     */
     private Button mSignUpBtn;
 
+    /**
+     * This gets views in this UI and set up listeners for the buttons.
+     *
+     * @param inflater is inflater
+     * @param container is container
+     * @param savedInstanceState is saved state
+     * @return view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

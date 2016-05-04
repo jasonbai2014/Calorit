@@ -9,6 +9,7 @@ import org.json.JSONObject;
 /**
  * This is a model class for body information table.
  * Qing Bai
+ * Levi Bingham
  * 2016/04/25
  */
 public class BodyInfo {

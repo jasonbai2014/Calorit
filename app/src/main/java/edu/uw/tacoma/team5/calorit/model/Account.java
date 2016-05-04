@@ -11,6 +11,7 @@ import edu.uw.tacoma.team5.calorit.MealLogFragment;
 /**
  * This is a model class for user account table.
  * Qing Bai
+ * Levi Bingham
  * 2016/04/24
  */
 public class Account {

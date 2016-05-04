@@ -12,15 +12,41 @@ import android.widget.Toast;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * This is a fragment for sign up UI
+ *
+ * Qing Bai
+ * Levi Bingham
+ * 2016/05/04
  */
 public class SignUpFragment extends Fragment {
-
+    /**
+     * This is an edit text field for user name
+     */
     private EditText mUsername;
+
+    /**
+     * This is an edit text field for password
+     */
     private EditText mPassword;
+
+    /**
+     * This is an edit text field for confirm password
+     */
     private EditText mConfirmPassword;
+
+    /**
+     * This is a button for "create account"
+     */
     private Button mCreateAccountBtn;
 
+    /**
+     * This gets views in this UI and set up a listener for the button.
+     *
+     * @param inflater is inflater
+     * @param container is container
+     * @param savedInstanceState is saved state
+     * @return view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
