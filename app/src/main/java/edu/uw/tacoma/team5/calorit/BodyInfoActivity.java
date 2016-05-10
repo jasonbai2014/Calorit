@@ -165,7 +165,7 @@ public class BodyInfoActivity extends AppCompatActivity {
             }
 
             mIntent = new Intent(this, HomeActivity.class);
-            BodyInfoTask task = new BodyInfoTask();
+            UpdateBodyInfoTask task = new UpdateBodyInfoTask();
             task.execute(buildURL(BODY_INFO_URL));
         }
     }
@@ -228,7 +228,7 @@ public class BodyInfoActivity extends AppCompatActivity {
      * Class used for starting an asynchronous task to communicate with the server. This will allow
      * the user to keep using the app without having to wait for a potentially slow network connection.
      */
-    private class BodyInfoTask extends AsyncTask<String, Void, String> {
+    private class UpdateBodyInfoTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... urls) {

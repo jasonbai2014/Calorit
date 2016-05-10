@@ -2,6 +2,8 @@ package edu.uw.tacoma.team5.calorit;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +25,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uw.tacoma.team5.calorit.data.MealLogDB;
 import edu.uw.tacoma.team5.calorit.model.MealLog;
 
 /**
@@ -54,17 +57,12 @@ public class MealLogFragment extends Fragment {
      */
     private String mCurrentUser;
 
+    private MealLogDB mMealLogDB;
+
+    private List<MealLog> mLogList;
+
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
-
-//    @SuppressWarnings("unused")
-//    public static MealLogFragment newInstance(int columnCount) {
-//        MealLogFragment fragment = new MealLogFragment();
-//        Bundle args = new Bundle();
-//        args.putInt(ARG_COLUMN_COUNT, columnCount);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     /**
      * This creates this fragment and gets current user's email from sharedPreferences
@@ -108,8 +106,30 @@ public class MealLogFragment extends Fragment {
             }
         }
 
-        DownloadMealLogTask task = new DownloadMealLogTask();
-        task.execute(buildURL());
+        if (isConnectedToNetwork()) {
+            DownloadMealLogTask task = new DownloadMealLogTask();
+            task.execute(buildURL());
+        } else {
+            if (mMealLogDB == null) {
+                mMealLogDB = new MealLogDB(getActivity());
+            }
+
+            if (mLogList == null) {
+                mLogList = mMealLogDB.getMealLog(mCurrentUser);
+                mLogList.add(0, null); // for header of the recycler view
+            }
+
+            if (mLogList.size() == 1) {
+                Toast.makeText(getActivity(), "No Network Connection, No local data available",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), "No Network Connection, Displaying local data",
+                        Toast.LENGTH_LONG).show();
+            }
+
+            mRecyclerView.setAdapter(new MyMealLogRecyclerViewAdapter(mLogList));
+        }
+
         return view;
     }
 
@@ -129,6 +149,30 @@ public class MealLogFragment extends Fragment {
         }
 
         return query.toString();
+    }
+
+    /**
+     * Checks whether or not this app connects to the Internet
+     *
+     * @return true if it connects to the Internet. Otherwise, false
+     */
+    private boolean isConnectedToNetwork() {
+        boolean result = false;
+
+        ConnectivityManager manager = (ConnectivityManager) getActivity().
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+
+        if (info != null && info.isConnected()) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    @Override
+    public void onStop() {
+        mMealLogDB.closeDB();
     }
 
     /**
@@ -183,7 +227,9 @@ public class MealLogFragment extends Fragment {
             mealLog.add(0, null); // for header of the recycler view
             result = MealLog.parseMealLogJSON(result, mealLog);
             // Something wrong with the JSON returned.
-            if (result != null) {
+            if (result != null && mealLog.size() == 1) {
+                Toast.makeText(getActivity(), "You don't have any meal logs", Toast.LENGTH_LONG).show();
+            } else if (result != null) {
                 Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;
@@ -192,6 +238,18 @@ public class MealLogFragment extends Fragment {
             if (!mealLog.isEmpty()){
                 // Everything is good, show the list of courses.
                 mRecyclerView.setAdapter(new MyMealLogRecyclerViewAdapter(mealLog));
+
+                if (mMealLogDB == null) {
+                    mMealLogDB = new MealLogDB(getActivity());
+                }
+
+                mMealLogDB.deleteMealLog();
+
+                for (int i = 1; i < mealLog.size(); i++) {
+                    MealLog log = mealLog.get(i);
+                    mMealLogDB.insertCourse(log.getmLogDate(), String.valueOf(log.getmCaloriesConsumed()),
+                            String.valueOf(log.getmCaloriesBurned()), mCurrentUser);
+                }
             }
         }
     }

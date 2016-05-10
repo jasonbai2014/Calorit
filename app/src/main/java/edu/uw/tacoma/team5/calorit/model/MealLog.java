@@ -107,7 +107,7 @@ public class MealLog {
 
     /**
      * Gets list representation of the MealLogs from JSON.
-     * 
+     *
      * @param mealLogJSON is the JSON of the mealLogs.
      * @param logs is the list that will contain the logs found in the mealLogJSON
      * @returns the reason the method failed, if any. NULL = success.

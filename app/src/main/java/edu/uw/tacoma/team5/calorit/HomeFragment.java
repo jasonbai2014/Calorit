@@ -165,7 +165,7 @@ public class HomeFragment extends Fragment {
                     }
 
                 } catch (Exception e) {
-                    response = "Unable to download the meal log, Reason: "
+                    response = "Unable to download the body info, Reason: "
                             + e.getMessage();
                 }
                 finally {
