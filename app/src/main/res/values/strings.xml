@@ -17,7 +17,7 @@
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="edit_height_feet_hint">Enter height(ft) (between 0 and 7)</string>
-    <string name="edit_height_inches_hint">Enter height(in) (between 0 and 12)</string>
+    <string name="edit_height_inches_hint">Enter height(in) (between 0 and 11)</string>
     <string name="edit_weight">Enter weight(lbs) (greater than 0)</string>
     <string name="edit_age_hint">Enter age (between 0 and 100)</string>
     <string name="edit_gender_hint">Enter gender (M or F)</string>

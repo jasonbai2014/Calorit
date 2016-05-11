@@ -1,5 +1,6 @@
 package edu.uw.tacoma.team5.calorit;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +25,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+
+import edu.uw.tacoma.team5.calorit.data.BodyInfoDB;
+import edu.uw.tacoma.team5.calorit.model.BodyInfo;
 
 /**
  * This class handles the interaction of editing or entering body information about the user.
@@ -72,6 +76,8 @@ public class BodyInfoActivity extends AppCompatActivity {
      */
     private SharedPreferences mSharedPreferences;
 
+    private String mCurrentUser;
+
     /**
      * Assigns all the UI elements to their relative fields in the class. Also sets onClickListener
      * for the save button to begin the process of saving body info.
@@ -87,6 +93,7 @@ public class BodyInfoActivity extends AppCompatActivity {
         mSharedPreferences = getSharedPreferences(getString(R.string.login_prefs),
                 Context.MODE_PRIVATE);
 
+        mCurrentUser = mSharedPreferences.getString(getString(R.string.loggedin_email), null);
         mHeightFeetEditText = (EditText) findViewById(R.id.height_feet_edit_text);
         mHeightInchesEditText = (EditText) findViewById(R.id.height_inches_edit_text);
         mWeightEditText = (EditText) findViewById(R.id.weight_edit_text);
@@ -125,7 +132,7 @@ public class BodyInfoActivity extends AppCompatActivity {
                 Toast.makeText(this, "Plase enter a valid height in feet", Toast.LENGTH_LONG).show();
                 mHeightFeetEditText.requestFocus();
                 result = false;
-            } else if (mHeightInches < 0 || mHeightInches > 12) {
+            } else if (mHeightInches < 0 || mHeightInches > 11) {
                 Toast.makeText(this, "Please enter a valid height in inches", Toast.LENGTH_LONG).show();
                 mHeightInchesEditText.requestFocus();
                 result = false;
@@ -164,9 +171,12 @@ public class BodyInfoActivity extends AppCompatActivity {
                 mBmr = (int) (66 + 6.23 * mWeight + 12.7 * (mHeightFeet * 12 + mHeightInches) - 6.8 * mAge);
             }
 
+            BodyInfoDB infoDB = new BodyInfoDB(this);
+            infoDB.upsertBodyInfo(mCurrentUser, mHeightFeet, mHeightInches, mWeight, mAge, mGender, mBmr);
             mIntent = new Intent(this, HomeActivity.class);
             UpdateBodyInfoTask task = new UpdateBodyInfoTask();
             task.execute(buildURL(BODY_INFO_URL));
+            infoDB.closeDB();
         }
     }
 
@@ -230,6 +240,13 @@ public class BodyInfoActivity extends AppCompatActivity {
      */
     private class UpdateBodyInfoTask extends AsyncTask<String, Void, String> {
 
+        private ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            dialog = ProgressDialog.show(BodyInfoActivity.this, "Please wait", "Processing", true, false);
+        }
+
         @Override
         protected String doInBackground(String... urls) {
             String response = "";
@@ -288,6 +305,8 @@ public class BodyInfoActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Something wrong with the data " +
                         e.getMessage(), Toast.LENGTH_LONG).show();
             }
+
+            dialog.dismiss();
         }
     }
 

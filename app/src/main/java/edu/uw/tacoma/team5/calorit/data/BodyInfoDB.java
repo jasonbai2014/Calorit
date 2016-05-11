@@ -30,9 +30,10 @@ public class BodyInfoDB {
     public BodyInfoDB(Context context) {
         mBodyInfoDBHelper = new BodyInfoDBHelper(context, DB_NAME, null, DB_VERSION);
         mSQLiteDatabase = mBodyInfoDBHelper.getWritableDatabase();
+        mBodyInfoDBHelper.onCreate(mSQLiteDatabase);
     }
 
-    public boolean insertBodyInfo(String email, int heightFeet, int heightInches, int weight,
+    public boolean upsertBodyInfo(String email, int heightFeet, int heightInches, int weight,
                               int age, String gender, int bmr) {
         ContentValues values = new ContentValues();
         values.put("email", email);
@@ -43,44 +44,31 @@ public class BodyInfoDB {
         values.put("gender", gender);
         values.put("bmr", bmr);
 
-        long rows = mSQLiteDatabase.insert(TABLE_NAME, null, values);
+        long rows = mSQLiteDatabase.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
         return rows != -1;
     }
 
-    public boolean updateBodyInfo(String email, int heightFeet, int heightInches, int weight,
-                              int age, String gender, int bmr) {
-        ContentValues values = new ContentValues();
-        values.put("email", email);
-        values.put("heightFeet", heightFeet);
-        values.put("heightInches", heightInches);
-        values.put("weight", weight);
-        values.put("age", age);
-        values.put("gender", gender);
-        values.put("bmr", bmr);
-
-        String[] whereArgs = {email};
-
-        int rows = mSQLiteDatabase.update(TABLE_NAME, values, "email = ?", whereArgs);
-
-        return rows == 1;
-    }
-
     public BodyInfo getBodyInfo(String email) {
+        BodyInfo info = null;
         String[] columns = {"heightFeet", "heightInches", "weight", "age", "gender", "bmr"};
         String[] whereArgs = {email};
 
         Cursor c = mSQLiteDatabase.query(TABLE_NAME, columns, "email = ?", whereArgs, null, null, null);
         c.moveToFirst();
 
-        int heightFeet = Integer.valueOf(c.getString(0));
-        int heightInches = Integer.valueOf(c.getString(1));
-        int weight = Integer.valueOf(c.getString(2));
-        int age = Integer.valueOf(c.getString(3));
-        String gender = c.getString(4);
-        int bmr = Integer.valueOf(c.getString(5));
+        if (c.getCount() == 1) {
+            int heightFeet = Integer.valueOf(c.getString(0));
+            int heightInches = Integer.valueOf(c.getString(1));
+            int weight = Integer.valueOf(c.getString(2));
+            int age = Integer.valueOf(c.getString(3));
+            String gender = c.getString(4);
+            int bmr = Integer.valueOf(c.getString(5));
+            info = new BodyInfo(heightFeet, heightInches, weight, age, gender, bmr);
+        }
 
-        return new BodyInfo(heightFeet, heightInches, weight, age, gender, bmr);
+
+        return info;
     }
 
     public void deleteBodyInfo() {
@@ -93,7 +81,7 @@ public class BodyInfoDB {
 
     private class BodyInfoDBHelper extends SQLiteOpenHelper {
 
-        private static final String CREATE_BODYINFO_SQL = "CREATE TABLE IF NOT EXISTS" + TABLE_NAME +
+        private static final String CREATE_BODYINFO_SQL = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                 "(email VARCHAR(40) PRIMARY KEY, heightFeet INT, heightInches INT, weight INT,"
                 + "age INT, gender VARCHAR(1), bmr INT)";
 

@@ -2,8 +2,9 @@ package edu.uw.tacoma.team5.calorit;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,12 +21,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
+import edu.uw.tacoma.team5.calorit.data.BodyInfoDB;
 import edu.uw.tacoma.team5.calorit.model.BodyInfo;
-import edu.uw.tacoma.team5.calorit.model.MealLog;
-
 
 /**
  * This is a fragment for home UI.
@@ -39,11 +37,6 @@ public class HomeFragment extends Fragment {
      * Location of php file on server for querying body info
      */
     private static final String BODY_INFO_URL = "http://cssgate.insttech.washington.edu/~_450atm5/querybodyinfo.php?";
-
-    /**
-     * BodyInfo object to store the body info pulled from the server.
-     */
-    private BodyInfo mBodyInfo;
 
     /**
      * SharedPreferences object used for knowing if the user is logged in and it also has user's
@@ -77,6 +70,8 @@ public class HomeFragment extends Fragment {
      */
     private Button mMealLogBtn;
 
+    private BodyInfoDB mBodyInfoDB;
+
     /**
      * Gets the user's email and stores it in the mCurrentUser field. Assigns the fragment's UI elements to the
      * relevant fields. Also starts a background task after building a URL to download this user's body information.
@@ -97,9 +92,15 @@ public class HomeFragment extends Fragment {
         mEnterMealBtn = (Button) view.findViewById(R.id.enter_meal_btn);
         mEditBodyInfoBtn = (Button) view.findViewById(R.id.edit_body_info_btn);
         mMealLogBtn = (Button) view.findViewById(R.id.meal_log_btn);
+        mBodyInfoDB = new BodyInfoDB(getActivity());
 
-        DownloadBodyInfoTask task = new DownloadBodyInfoTask();
-        task.execute(buildURL());
+        if (isConnectedToNetwork()) {
+            DownloadBodyInfoTask task = new DownloadBodyInfoTask();
+            task.execute(buildURL());
+        } else {
+            BodyInfo info = mBodyInfoDB.getBodyInfo(mCurrentUser);
+            mCaloriesTextView.setText(info.getBmr() + " Calories");
+        }
 
         mEnterMealBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +142,31 @@ public class HomeFragment extends Fragment {
         }
 
         return query.toString();
+    }
+
+    /**
+     * Checks whether or not this app connects to the Internet
+     *
+     * @return true if it connects to the Internet. Otherwise, false
+     */
+    private boolean isConnectedToNetwork() {
+        boolean result = false;
+
+        ConnectivityManager manager = (ConnectivityManager) getActivity().
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+
+        if (info != null && info.isConnected()) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mBodyInfoDB.closeDB();
     }
 
     /**
@@ -189,14 +215,17 @@ public class HomeFragment extends Fragment {
                 return;
             }
 
-            mBodyInfo = BodyInfo.parseBodyInfoJSON(result);
+            BodyInfo info = BodyInfo.parseBodyInfoJSON(result);
 
-            if (mBodyInfo == null) {
+            if (info == null) {
                 Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;
             } else {
-                mCaloriesTextView.setText(mBodyInfo.getBmr() + " Calories");
+                mCaloriesTextView.setText(info.getBmr() + " Calories");
+                mBodyInfoDB.upsertBodyInfo(mCurrentUser, info.getHeightFeet(),
+                        info.getHeightInches(),info.getWeight(),
+                        info.getAge(), info.getGender(), info.getBmr());
             }
         }
     }

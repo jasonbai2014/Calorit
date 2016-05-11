@@ -1,5 +1,6 @@
 package edu.uw.tacoma.team5.calorit;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -200,6 +201,13 @@ public class LogInActivity extends AppCompatActivity {
      */
     private class AccountTask extends AsyncTask<String, Void, String> {
 
+        private ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            dialog = ProgressDialog.show(LogInActivity.this, "Please wait", "Processing", true, false);
+        }
+
         @Override
         protected String doInBackground(String... urls) {
             String response = "";
@@ -260,6 +268,8 @@ public class LogInActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Something wrong with the data" +
                         e.getMessage(), Toast.LENGTH_LONG).show();
             }
+
+            dialog.dismiss();
         }
     }
 }

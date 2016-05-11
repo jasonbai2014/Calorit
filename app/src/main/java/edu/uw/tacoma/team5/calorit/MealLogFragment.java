@@ -1,5 +1,6 @@
 package edu.uw.tacoma.team5.calorit;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -172,6 +173,7 @@ public class MealLogFragment extends Fragment {
 
     @Override
     public void onStop() {
+        super.onStop();
         mMealLogDB.closeDB();
     }
 
@@ -179,6 +181,14 @@ public class MealLogFragment extends Fragment {
      * This is a class used to communicate with the server and download meal log
      */
     private class DownloadMealLogTask extends AsyncTask<String, Void, String> {
+
+        private ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            dialog = ProgressDialog.show(getActivity(), "Please wait", "Processing", true, false);
+        }
+
         @Override
         protected String doInBackground(String... urls) {
             String response = "";
@@ -251,6 +261,8 @@ public class MealLogFragment extends Fragment {
                             String.valueOf(log.getmCaloriesBurned()), mCurrentUser);
                 }
             }
+
+            dialog.dismiss();
         }
     }
 }

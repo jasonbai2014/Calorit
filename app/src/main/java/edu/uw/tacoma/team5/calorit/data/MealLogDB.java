@@ -30,6 +30,7 @@ public class MealLogDB {
     public MealLogDB(Context context) {
         mMealLogDBHelper = new MealLogDBHelper(context, DB_NAME, null, DB_VERSION);
         mSQLiteDatabase = mMealLogDBHelper.getWritableDatabase();
+        mMealLogDBHelper.onCreate(mSQLiteDatabase);
     }
 
     public boolean insertCourse(String logDate, String caloriesConsumed, String caloriesBurned, String email) {
