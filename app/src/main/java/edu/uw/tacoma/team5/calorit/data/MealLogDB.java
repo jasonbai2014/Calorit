@@ -75,7 +75,7 @@ public class MealLogDB {
     private class MealLogDBHelper extends SQLiteOpenHelper {
 
         private static final String CREATE_MEALLOG_SQL = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
-                "(id INT PRIMARY KEY, logDate DATE, caloriesConsumed INT, caloriesBurned INT, email VARCHAR(40))";
+                "(id INT PRIMARY KEY, logDate DATE, caloriesConsumed INT, caloriesBurnegit d INT, email VARCHAR(40))";
 
         private static final String DROP_MEALLOG_SQL = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
