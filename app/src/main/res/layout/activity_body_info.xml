@@ -1,62 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:id="@+id/activity_body_info"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:stretchColumns="1"
+    android:padding="20dp"
     tools:context="edu.uw.tacoma.team5.calorit.BodyInfoActivity">
 
-    <EditText
+    <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:id="@+id/height_feet_edit_text"
-        android:hint="@string/edit_height_feet_hint"
-        />
+        android:layout_marginRight="20dp">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:id="@+id/height_inches_edit_text"
-        android:hint="@string/edit_height_inches_hint"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/height_feet_label"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:id="@+id/weight_edit_text"
-        android:hint="@string/edit_weight"/>
+        <Spinner
+            android:id="@+id/height_ft_spinner"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:prompt="@string/height_feet_prompt"
+            android:spinnerMode="dialog"></Spinner>
+    </TableRow>
 
-    <EditText
+    <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:id="@+id/age_edit_text"
-        android:hint="@string/edit_age_hint"/>
+        android:layout_marginRight="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/height_inches_label"/>
 
-    <EditText
+        <Spinner
+            android:id="@+id/height_in_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:prompt="@string/height_inches_prompt"
+            android:spinnerMode="dialog"></Spinner>
+    </TableRow>
+
+    <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:id="@+id/gender_edit_text"
-        android:hint="@string/edit_gender_hint"/>
+        android:layout_marginRight="20dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/weight_label" />
+
+        <Spinner
+            android:id="@+id/weight_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:prompt="@string/weight_prompt"
+            android:spinnerMode="dialog"></Spinner>
+
+    </TableRow>
+
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/age_label" />
+
+        <Spinner
+            android:id="@+id/age_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:prompt="@string/age_prompt"
+            android:spinnerMode="dialog"></Spinner>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gender_label" />
+
+        <RadioGroup
+            android:id="@+id/gender_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/female_radio_btn"
+                android:text="@string/gender_female_label"
+                android:checked="true"/>
+
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/male_radio_btn"
+                android:text="@string/gender_male_label"/>
+        </RadioGroup>
+    </TableRow>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp">
 
@@ -66,7 +139,6 @@
             android:id="@+id/save_body_info_button"
             android:text="@string/save_body_info_btn_text"
             android:layout_centerHorizontal="true"/>
-
     </RelativeLayout>
 
-</LinearLayout>
+</TableLayout>

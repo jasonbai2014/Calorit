@@ -2,8 +2,8 @@
     <string name="app_name">Calorit</string>
     <string name="username_hint">Enter your email</string>
     <string name="password_hint">Enter your password</string>
-    <string name="sign_up_username_hint">Enter your email, >= 20 characters</string>
-    <string name="sign_up_password_hint">Enter your password, >= 10 characters</string>
+    <string name="sign_up_username_hint">Email (at least 20 characters)</string>
+    <string name="sign_up_password_hint">Password (at least 10 characters)</string>
     <string name="confirm_password_hint">Confirm your password</string>
     <string name="sign_in_btn">Sign In</string>
     <string name="sign_up_btn">Sign up</string>
@@ -16,11 +16,18 @@
     <string name="logout_dialog_message">Do you want to log out?</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
-    <string name="edit_height_feet_hint">Enter height(ft) (between 0 and 7)</string>
-    <string name="edit_height_inches_hint">Enter height(in) (between 0 and 11)</string>
-    <string name="edit_weight">Enter weight(lbs) (greater than 0)</string>
-    <string name="edit_age_hint">Enter age (between 0 and 100)</string>
-    <string name="edit_gender_hint">Enter gender (M or F)</string>
+    <string name="height_feet_label">Height in feet: </string>
+    <string name="height_feet_prompt">Please enter your feet</string>
+    <string name="height_inches_label">Height in inches: </string>
+    <string name="height_inches_prompt">Please enter your inches</string>
+    <string name="weight_label">Weight: </string>
+    <string name="weight_prompt">Please enter your weight</string>
+    <string name="age_label">Age: </string>
+    <string name="age_prompt">Please enter your age</string>
+    <string name="gender_label">Gender: </string>
+    <string name="gender_male_label">M</string>
+    <string name="gender_female_label">F</string>
+
     <string name="save_body_info_btn_text">Save</string>
     <string name="calories_left_textview">Calories Left</string>
     <string name="enter_meal_btn">Enter Meal</string>
