@@ -26,21 +26,21 @@ public class FoodItemDB {
         mSQLiteDatabase = mFoodItemDBHelper.getWritableDatabase();
     }
 
-    public List<FoodItem> getFoodItems(String category) {
-        List<FoodItem> list = new ArrayList<FoodItem>();
-        String[] columns = {"foodName", "calories"};
-        String[] whereArgs = {category};
-
-        Cursor c = mSQLiteDatabase.query(TABLE_NAME, columns, "category = ?", whereArgs, null, null, null);
-        c.moveToFirst();
-
-        for (int i = 0; i < c.getCount(); i++) {
-            // TO-DO : need to create food items and add them into the list once FoodItem model class is done
-            c.moveToNext();
-        }
-
-        return list;
-    }
+//    public List<FoodItem> getFoodItems(String category) {
+//        List<FoodItem> list = new ArrayList<FoodItem>();
+//        String[] columns = {"foodName", "calories"};
+//        String[] whereArgs = {category};
+//
+//        Cursor c = mSQLiteDatabase.query(TABLE_NAME, columns, "category = ?", whereArgs, null, null, null);
+//        c.moveToFirst();
+//
+//        for (int i = 0; i < c.getCount(); i++) {
+//            // TO-DO : need to create food items and add them into the list once FoodItem model class is done
+//            c.moveToNext();
+//        }
+//
+//        return list;
+//    }
 
     public boolean insertFoodItem(String foodName, String category, int calories) {
         ContentValues values = new ContentValues();

@@ -27,10 +27,17 @@
     <string name="gender_label">Gender: </string>
     <string name="gender_male_label">M</string>
     <string name="gender_female_label">F</string>
-
     <string name="save_body_info_btn_text">Save</string>
     <string name="calories_left_textview">Calories Left</string>
     <string name="enter_meal_btn">Enter Meal</string>
     <string name="meal_log_btn">Meal Log</string>
     <string name="edit_body_info_btn">Edit Body Info</string>
+
+    <string name="food_category_carbohydrate">Ccarbohydrate</string>
+    <string name="food_category_fruit_veggie">Fruits and Veggies</string>
+    <string name="food_category_dairy">Dairy</string>
+    <string name="food_category_meat">Meat</string>
+    <string name="food_category_sweet">Sweet</string>
+    <string name="food_category_snack">Snack</string>
+    <string name="done_btn">Done</string>
 </resources>
