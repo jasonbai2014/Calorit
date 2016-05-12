@@ -44,6 +44,11 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    public void enterMeal() {
+        Intent i = new Intent(this, MealActivity.class);
+        startActivity(i);
+    }
+
     /**
      * This switches from HomeFragment to MealLogFragment.
      */

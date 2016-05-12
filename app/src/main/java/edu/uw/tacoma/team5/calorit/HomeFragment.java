@@ -105,7 +105,7 @@ public class HomeFragment extends Fragment {
         mEnterMealBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ((HomeActivity) getActivity()).enterMeal();
             }
         });
 

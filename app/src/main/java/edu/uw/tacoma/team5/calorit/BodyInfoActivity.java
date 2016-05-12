@@ -11,8 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -25,6 +30,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.uw.tacoma.team5.calorit.data.BodyInfoDB;
 import edu.uw.tacoma.team5.calorit.model.BodyInfo;
@@ -46,15 +53,13 @@ public class BodyInfoActivity extends AppCompatActivity {
     private static final String BODY_INFO_URL = "http://cssgate.insttech.washington.edu/~_450atm5/bodyinfo.php?";
 
     /**
-     * EditTexts used in the UI for the user to enter information about their body.
-     */
-    private EditText mHeightFeetEditText, mHeightInchesEditText, mWeightEditText,
-            mAgeEditText, mGenderEditText;
-
-    /**
      * Button used to submit the user's information to the database.
      */
     private Button mSaveBodyInfoButton;
+
+    private Spinner mHeightFeetSpinner, mHeightInchesSpinner, mWeightSpinner, mAgeSpinner;
+
+    private RadioGroup mGenderRadioGroup;
 
     /**
      * Integer fields used to store the user's information that they enter.
@@ -92,16 +97,20 @@ public class BodyInfoActivity extends AppCompatActivity {
 
         mSharedPreferences = getSharedPreferences(getString(R.string.login_prefs),
                 Context.MODE_PRIVATE);
-
         mCurrentUser = mSharedPreferences.getString(getString(R.string.loggedin_email), null);
-        mHeightFeetEditText = (EditText) findViewById(R.id.height_feet_edit_text);
-        mHeightInchesEditText = (EditText) findViewById(R.id.height_inches_edit_text);
-        mWeightEditText = (EditText) findViewById(R.id.weight_edit_text);
-        mAgeEditText = (EditText) findViewById(R.id.age_edit_text);
-        mGenderEditText = (EditText) findViewById(R.id.gender_edit_text);
+
+        mHeightFeetSpinner = (Spinner) findViewById(R.id.height_ft_spinner);
+        mHeightFeetSpinner.setAdapter(createArrayAdapter(7));
+        mHeightInchesSpinner = (Spinner) findViewById(R.id.height_in_spinner);
+        mHeightInchesSpinner.setAdapter(createArrayAdapter(11));
+        mWeightSpinner = (Spinner) findViewById(R.id.weight_spinner);
+        mWeightSpinner.setAdapter(createArrayAdapter(300));
+        mAgeSpinner = (Spinner) findViewById(R.id.age_spinner);
+        mAgeSpinner.setAdapter(createArrayAdapter(100));
+
+        mGenderRadioGroup = (RadioGroup) findViewById(R.id.gender_radio_group);
 
         mSaveBodyInfoButton = (Button) findViewById(R.id.save_body_info_button);
-
         mSaveBodyInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,51 +119,22 @@ public class BodyInfoActivity extends AppCompatActivity {
         });
     }
 
+    private ArrayAdapter createArrayAdapter(int num) {
+        List<Integer> list = new ArrayList<Integer>();
 
-    /**
-     * Checks to make sure that the input entered is the same type that was expected and that they
-     * are within the acceptable ranges. If there is something wrong an error message will pop up
-     * in a toast saying so.
-     *
-     * @returns true if input is same type as expected and within accepted ranges. False otherwise.
-     */
-    private boolean isInputValid() {
-        boolean result = true;
-
-        try {
-            mHeightFeet = Integer.parseInt(mHeightFeetEditText.getText().toString());
-            mHeightInches = Integer.parseInt(mHeightInchesEditText.getText().toString());
-            mWeight = Integer.parseInt(mWeightEditText.getText().toString());
-            mAge = Integer.parseInt(mAgeEditText.getText().toString());
-            mGender = mGenderEditText.getText().toString();
-
-            if (mHeightFeet < 0 || mHeightFeet > 7) {
-                Toast.makeText(this, "Plase enter a valid height in feet", Toast.LENGTH_LONG).show();
-                mHeightFeetEditText.requestFocus();
-                result = false;
-            } else if (mHeightInches < 0 || mHeightInches > 11) {
-                Toast.makeText(this, "Please enter a valid height in inches", Toast.LENGTH_LONG).show();
-                mHeightInchesEditText.requestFocus();
-                result = false;
-            } else if (mWeight <= 0) {
-                Toast.makeText(this, "Please enter a positive number for weight", Toast.LENGTH_LONG).show();
-                mWeightEditText.requestFocus();
-                result = false;
-            } else if (mAge < 0 && mAge > 100) {
-                Toast.makeText(this, "Please enter a valid age", Toast.LENGTH_LONG).show();
-                mAgeEditText.requestFocus();
-                result = false;
-            } else if (!(mGender.equalsIgnoreCase("m") || mGender.equalsIgnoreCase("f"))) {
-                Toast.makeText(this, "Please enter a valid gender", Toast.LENGTH_LONG).show();
-                mGenderEditText.requestFocus();
-                result = false;
-            }
-        } catch (NumberFormatException e) {
-            result = false;
-            Toast.makeText(this, "Please make sure you enter a number", Toast.LENGTH_LONG).show();
+        for (int i = 1; i <= num; i++) {
+            list.add(i);
         }
 
-        return result;
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.spinner_item, list);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
+        return adapter;
+    }
+
+
+    private int parseSpinnerData(Spinner spinner) {
+        TextView view = (TextView) spinner.getSelectedView();
+        return Integer.valueOf(view.getText().toString());
     }
 
     /**
@@ -163,7 +143,13 @@ public class BodyInfoActivity extends AppCompatActivity {
      */
     public void processSaveBodyInfo(){
 
-        if(isConnectedToNetwork() && isInputValid()){
+        if(isConnectedToNetwork()){
+            mHeightFeet = parseSpinnerData(mHeightFeetSpinner);
+            mHeightInches = parseSpinnerData(mHeightInchesSpinner);
+            mWeight = parseSpinnerData(mWeightSpinner);
+            mAge = parseSpinnerData(mAgeSpinner);
+            int selectedBtnId = mGenderRadioGroup.getCheckedRadioButtonId();
+            mGender = ((RadioButton) findViewById(selectedBtnId)).getText().toString();
 
             if (mGender.equalsIgnoreCase("F")) {
                 mBmr = (int) (655 + 4.35 * mWeight + 4.7 * (mHeightFeet * 12 + mHeightInches) - 4.7 * mAge);
