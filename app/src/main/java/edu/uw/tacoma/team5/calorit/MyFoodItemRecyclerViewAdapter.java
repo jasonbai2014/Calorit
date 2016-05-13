@@ -9,7 +9,6 @@ import android.widget.TextView;
 import edu.uw.tacoma.team5.calorit.FoodItemFragment.OnListFragmentInteractionListener;
 import edu.uw.tacoma.team5.calorit.model.FoodItem;
 
-
 import java.util.List;
 
 /**
@@ -18,14 +17,32 @@ import java.util.List;
  */
 public class MyFoodItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodItemRecyclerViewAdapter.ViewHolder> {
 
+    /**
+     * List of FoodItems for the category selected.
+     */
     private final List<FoodItem> mFoodItems;
+
+    /**
+     * Listener to watch for a user clicking/selecting a FoodItem.
+     */
     private final OnListFragmentInteractionListener mListener;
 
+    /**
+     * Constructor for the MyFoodItemRecyclerViewAdapter class.
+     * @param items FoodItems to be put into the RecyclerViewAdapter.
+     * @param listener Listener to watch for user interaction with the items in the RecyclerViewAdapter.
+     */
     public MyFoodItemRecyclerViewAdapter(List<FoodItem> items, OnListFragmentInteractionListener listener) {
         mFoodItems = items;
         mListener = listener;
     }
 
+    /**
+     * Inflates the view to be displayed.
+     * @param parent ?
+     * @param viewType ?
+     * @return returns the view to be displayed
+     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -33,13 +50,18 @@ public class MyFoodItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodIt
         return new ViewHolder(view);
     }
 
+    /**
+     * Binds view the view holder to the view to display what should be on the view.
+     * @param holder ?
+     * @param position ?
+     */
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mFoodItems.get(position);
-        holder.mIdView.setText(mFoodItems.get(position).getmFoodName());
+        holder.mFoodNameTextView.setText(mFoodItems.get(position).getmFoodName());
 
         //Maybe don't need this line. Have to work on other parts first to know.
-//        holder.mContentView.setText(mFoodItems.get(position).content);
+//        holder.mCaloriesTextView.setText(mFoodItems.get(position).content);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,27 +75,61 @@ public class MyFoodItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodIt
         });
     }
 
+    /**
+     * Getter for the item count.
+     * @return size of the mFoodItems list.
+     */
     @Override
     public int getItemCount() {
         return mFoodItems.size();
     }
 
+    /**
+     * This class is used to hold the views for the Recycler view. This essentially creates the
+     * visible, clickable list of FoodItems that the user will see after selecting a category.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
+
+        /**
+         * This is the view that will hold a FoodItem.
+         */
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+
+        /**
+         * This is the TextView that will display the FoodItem's name.
+         */
+        public final TextView mFoodNameTextView;
+
+        /**
+         * This is the TextView that will display the FoodItem's calories (per 100g).
+         */
+        public final TextView mCaloriesTextView;
+
+        /**
+         * This is the FoodItem that will be displayed in this ViewHolder.
+         */
         public FoodItem mItem;
 
+        /**
+         * This is the constructor for the ViewHolder class.
+         *
+         * @param view is the view used to hold the information about this FoodItem.
+         */
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mFoodNameTextView = (TextView) view.findViewById(R.id.food_name_textview);
+            mCaloriesTextView = (TextView) view.findViewById(R.id.calories_textview);
         }
 
+        /**
+         * This is the toString() method for ViewHolder.
+         *
+         * @return A String representation of the number of calories for this FoodItem.
+         */
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mCaloriesTextView.getText() + "'";
         }
     }
 }

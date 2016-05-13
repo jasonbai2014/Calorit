@@ -33,7 +33,7 @@
     <string name="meal_log_btn">Meal Log</string>
     <string name="edit_body_info_btn">Edit Body Info</string>
 
-    <string name="food_category_carbohydrate">Carbohydrate</string>
+    <string name="food_category_carbohydrate">Carbohydrates</string>
     <string name="food_category_fruit_veggie">Fruits and Veggies</string>
     <string name="food_category_dairy">Dairy</string>
     <string name="food_category_meat">Meat</string>

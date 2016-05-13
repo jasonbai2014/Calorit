@@ -13,10 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
-
-//import edu.uw.tacoma.team5.calorit.dummy.DummyContent;
-//import edu.uw.tacoma.team5.calorit.dummy.DummyContent.DummyItem;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -27,13 +25,12 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uw.tacoma.team5.calorit.data.MealLogDB;
+import edu.uw.tacoma.team5.calorit.data.FoodItemDB;
 import edu.uw.tacoma.team5.calorit.model.FoodItem;
-import edu.uw.tacoma.team5.calorit.model.MealLog;
 
 /**
  * A fragment representing a list of Items.
- * <p/>
+ *
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
@@ -42,19 +39,47 @@ public class FoodItemFragment extends Fragment {
     /**
      * This is a url used to query food item data from the server.
      */
-    private static final String MEAL_LOG_URL = "http://cssgate.insttech.washington.edu/~_450atm5/fooditems.php?";
+    private static final String FOOD_ITEMS_URL = "http://cssgate.insttech.washington.edu/~_450atm5/fooditems.php?";
 
+    /**
+     * This is a recyclerview used to show the list of foods within a selected category.
+     */
     private RecyclerView mRecyclerView;
 
+    /**
+     * This is the number of columns in the gridlayout manager.
+     */
     private int mColumnCount = 1;
 
-    private MealLogDB mFoodItemDB;
+    /**
+     * This is an instance of the FoodItemDB class used to store local information.
+     */
+    private FoodItemDB mFoodItemDB;
 
+    /**
+     * This is the list that the FoodItems will be stored in that are to be displayed.
+     */
     private List<FoodItem> mFoodList;
 
+    /**
+     * This is the current user's email address.
+     */
     private String mCurrentUser;
 
+    /**
+     * This will hold the category that was selected before starting this fragment.
+     */
+    private String mSelectedCategory;
+
+    /**
+     * This is a listener to interaction on the fragment (ie. A FoodItem was clicked on).
+     */
     private OnListFragmentInteractionListener mListener;
+
+    /**
+     * Button to return back to the categories list.
+     */
+    private Button mBackToCategoriesBtn;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -63,32 +88,33 @@ public class FoodItemFragment extends Fragment {
     public FoodItemFragment() {
     }
 
+    /**
+     * This method calls the super method, passing in the savedInstanceState
+     *
+     * @param savedInstanceState Bundle passed in to get data about the savedInstanceState.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     }
 
+    /**
+     * This is used to determine what is displayed on the view. It will check for network connectivity
+     * then either download data from the server to display or it will grab data from the local
+     * SQLite database if there is no network connection.
+     *
+     * @param inflater inflates the view
+     * @param container holds the contents of the view
+     * @param savedInstanceState Bundle to get data about the saved instance state.
+     * @return the created view to display.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.fragment_fooditem_list, container, false);
-//
-//        // Set the adapter
-//        if (view instanceof RecyclerView) {
-//            Context context = view.getContext();
-//            RecyclerView recyclerView = (RecyclerView) view;
-//            if (mColumnCount <= 1) {
-//                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-//            } else {
-//                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-//            }
-//          //  recyclerView.setAdapter(new MyFoodItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
-//        }
 
 
-
-        View view = inflater.inflate(R.layout.fragment_meallog_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_fooditem_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -106,11 +132,11 @@ public class FoodItemFragment extends Fragment {
             task.execute(buildURL());
         } else {
             if (mFoodItemDB == null) {
-                mFoodItemDB = new MealLogDB(getActivity());
+                mFoodItemDB = new FoodItemDB(getActivity());
             }
 
             if (mFoodList == null) {
-               // mLogList = mFoodItemDB.getFoodItems();
+                mFoodList = new ArrayList<FoodItem>(); // mFoodItemDB.getFoodItems();
                 mFoodList.add(0, null); // for header of the recycler view
             }
 
@@ -125,21 +151,29 @@ public class FoodItemFragment extends Fragment {
             mRecyclerView.setAdapter(new MyFoodItemRecyclerViewAdapter(mFoodList, mListener));
         }
 
+        mBackToCategoriesBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                ((HomeActivity) getActivity()).enterMeal();
+            }
+        });
 
         return view;
     }
 
     /**
-     * This builds a url query sent to the server
+     * This builds a url query sent to the server. It appends the category to the end of the URL
+     * to determine what the php file on server will query with.
      *
-     * @return built url
+     * @return URL of the php file's location with the category selected appended on the end.
      */
     private String buildURL() {
-        StringBuilder query = new StringBuilder(MEAL_LOG_URL);
+        StringBuilder query = new StringBuilder(FOOD_ITEMS_URL);
 
         try {
             query.append("category=");
-            query.append(URLEncoder.encode(mCurrentUser, "UTF-8"));
+            query.append(URLEncoder.encode(mSelectedCategory, "UTF-8"));
         } catch (Exception e) {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -166,6 +200,11 @@ public class FoodItemFragment extends Fragment {
         return result;
     }
 
+    /**
+     * This method is called when the listener is attached to the fragment.
+     *
+     * @param context where the fragment is at.
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -177,6 +216,9 @@ public class FoodItemFragment extends Fragment {
         }
     }
 
+    /**
+     * This method is called when the listener is detached from the fragment.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
@@ -206,13 +248,26 @@ public class FoodItemFragment extends Fragment {
      */
     private class DownloadFoodItemTask extends AsyncTask<String, Void, String> {
 
+        /**
+         * dialog used to communicate with the user that work is being done.
+         */
         private ProgressDialog dialog;
 
+        /**
+         * Shows a dialog to let user know that work is being done and to be patient.
+         */
         @Override
         protected void onPreExecute() {
             dialog = ProgressDialog.show(getActivity(), "Please wait", "Processing", true, false);
         }
 
+        /**
+         * This method contains what is done in the background on an Asynchronous task to allow the
+         * user to continue using the app without having to sit and wait for these tasks to finish.
+         *
+         * @param urls the url used to set up a connection to the database on the server.
+         * @return either the error message for a failure or the result of the query.
+         */
         @Override
         protected String doInBackground(String... urls) {
             String response = "";
@@ -243,7 +298,7 @@ public class FoodItemFragment extends Fragment {
         }
 
         /**
-         * This received data from the server and creates a list of meal logs which is sent to the
+         * This received data from the server and creates a list of food items which is sent to the
          * adapter
          *
          * @param result is a string from doInBackground()
@@ -274,10 +329,10 @@ public class FoodItemFragment extends Fragment {
                 mRecyclerView.setAdapter(new MyFoodItemRecyclerViewAdapter(foodItems, mListener));
 
                 if (mFoodItemDB == null) {
-                    mFoodItemDB = new MealLogDB(getActivity());
+                    mFoodItemDB = new FoodItemDB(getActivity());
                 }
 
-                mFoodItemDB.deleteMealLog();
+//                mFoodItemDB.deleteFoodItem();
 
                 for (int i = 1; i < foodItems.size(); i++) {
                     FoodItem foodItem = foodItems.get(i);
