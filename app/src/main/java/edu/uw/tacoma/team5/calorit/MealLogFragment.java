@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,7 @@ public class MealLogFragment extends Fragment {
     /**
      * This saves user's username
      */
-    private SharedPreferences mSharedPerferences;
+    private SharedPreferences mSharedPreferences;
 
     /**
      * This is current user's email (username)
@@ -78,9 +77,9 @@ public class MealLogFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
 
-        mSharedPerferences = getActivity().getSharedPreferences(getString(R.string.login_prefs),
+        mSharedPreferences = getActivity().getSharedPreferences(getString(R.string.login_prefs),
                 Context.MODE_PRIVATE);
-        mCurrentUser = mSharedPerferences.getString(getString(R.string.loggedin_email), null);
+        mCurrentUser = mSharedPreferences.getString(getString(R.string.loggedin_email), null);
     }
 
     /**

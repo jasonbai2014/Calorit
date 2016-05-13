@@ -101,7 +101,7 @@ public class FoodItem {
      * @param foodItems List that each FoodItem in the JSON will be added to.
      * @return the reason the method failed, if any. NULL = success.
      */
-    String parseFoodItemJSON(String foodItemJSON, List<FoodItem> foodItems){
+    public static String parseFoodItemJSON(String foodItemJSON, List<FoodItem> foodItems){
         String reason = null;
 
         if (foodItemJSON != null) {

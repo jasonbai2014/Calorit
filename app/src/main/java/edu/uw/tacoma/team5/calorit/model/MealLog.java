@@ -21,7 +21,7 @@ public class MealLog {
      * The keys that are used to get log data, calories consumed, and calories burned
      */
     public static final String LOG_DATE = "logDate", CALORIES_CONSUMED = "caloriesConsumed",
-        CALORIES_BURNED = "caloriesBurned";
+            CALORIES_BURNED = "caloriesBurned";
 
     /**
      * String object representing the date that this log happened on.
