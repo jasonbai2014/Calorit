@@ -1,10 +1,15 @@
 package edu.uw.tacoma.team5.calorit;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.uw.tacoma.team5.calorit.FoodItemFragment.OnFoodItemListener;
 import edu.uw.tacoma.team5.calorit.model.FoodItem;
@@ -70,9 +75,36 @@ public class MyFoodItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodIt
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        // Notify the active callbacks interface (the activity, if the
-                        // fragment is attached to one) that an item has been selected.
-                        mListener.onFoodItemClick(holder.mItem);
+                        final EditText text = new EditText(holder.mView.getContext());
+                        text.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        text.setMaxLines(1);
+                        text.setHint("Please enter amount of the food");
+
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(holder.mView.getContext());
+                        dialog.setTitle("Amount");
+                        dialog.setView(text, 0, 60, 0, 0);
+
+                        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Notify the active callbacks interface (the activity, if the
+                                // fragment is attached to one) that an item has been selected.
+                                int amount = Integer.valueOf(text.getText().toString());
+                                mListener.onFoodItemClick(holder.mItem, amount);
+                                Toast.makeText(holder.mView.getContext(), "You have add " +
+                                        amount + " g of the food into the log", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                        dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                        dialog.show();
                     }
                 }
             });

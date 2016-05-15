@@ -221,7 +221,7 @@ public class FoodItemFragment extends Fragment {
      */
     public interface OnFoodItemListener {
         //We reach here when a food item was selected.
-        void onFoodItemClick(FoodItem item);
+        void onFoodItemClick(FoodItem item, int amount);
     }
 
 

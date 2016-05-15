@@ -29,7 +29,7 @@ public class MealActivity extends AppCompatActivity implements FoodItemFragment.
     }
 
     @Override
-    public void onFoodItemClick(FoodItem item) {
+    public void onFoodItemClick(FoodItem item, int amount) {
 
     }
 }
