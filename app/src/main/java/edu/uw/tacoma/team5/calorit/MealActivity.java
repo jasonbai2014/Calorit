@@ -4,7 +4,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MealActivity extends AppCompatActivity {
+import edu.uw.tacoma.team5.calorit.model.FoodItem;
+
+public class MealActivity extends AppCompatActivity implements FoodItemFragment.OnFoodItemListener {
 
     public static String KEY = "edu.uw.tacoma.team5.calorit.MealActivity";
     @Override
@@ -17,11 +19,17 @@ public class MealActivity extends AppCompatActivity {
     }
 
     public void categorySelected(String category) {
-//        FragmentManager manager = getSupportFragmentManager();
-//        FoodItemFragment fragment = new FoodItemFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putString(KEY, category);
-//        fragment.setArguments(bundle);
-//        manager.beginTransaction().replace(R.id.meal_activity_layout, fragment).commit();
+        FragmentManager manager = getSupportFragmentManager();
+        FoodItemFragment fragment = new FoodItemFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY, category);
+        fragment.setArguments(bundle);
+        manager.beginTransaction().replace(R.id.meal_activity_layout, fragment).
+                addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onFoodItemClick(FoodItem item) {
+
     }
 }

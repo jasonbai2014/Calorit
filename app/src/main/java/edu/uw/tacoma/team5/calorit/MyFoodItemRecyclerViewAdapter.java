@@ -6,14 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import edu.uw.tacoma.team5.calorit.FoodItemFragment.OnListFragmentInteractionListener;
+import edu.uw.tacoma.team5.calorit.FoodItemFragment.OnFoodItemListener;
 import edu.uw.tacoma.team5.calorit.model.FoodItem;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link edu.uw.tacoma.team5.calorit.model.FoodItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link OnFoodItemListener}.
  */
 public class MyFoodItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodItemRecyclerViewAdapter.ViewHolder> {
 
@@ -25,14 +25,14 @@ public class MyFoodItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodIt
     /**
      * Listener to watch for a user clicking/selecting a FoodItem.
      */
-    private final OnListFragmentInteractionListener mListener;
+    private final OnFoodItemListener mListener;
 
     /**
      * Constructor for the MyFoodItemRecyclerViewAdapter class.
      * @param items FoodItems to be put into the RecyclerViewAdapter.
      * @param listener Listener to watch for user interaction with the items in the RecyclerViewAdapter.
      */
-    public MyFoodItemRecyclerViewAdapter(List<FoodItem> items, OnListFragmentInteractionListener listener) {
+    public MyFoodItemRecyclerViewAdapter(List<FoodItem> items, FoodItemFragment.OnFoodItemListener listener) {
         mFoodItems = items;
         mListener = listener;
     }
@@ -58,21 +58,25 @@ public class MyFoodItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodIt
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mFoodItems.get(position);
-        holder.mFoodNameTextView.setText(mFoodItems.get(position).getmFoodName());
 
-        //Maybe don't need this line. Have to work on other parts first to know.
-//        holder.mCaloriesTextView.setText(mFoodItems.get(position).content);
+        if (position == 0) {
+            holder.mFoodNameTextView.setText("Food Name");
+            holder.mCaloriesTextView.setText("Calories (cal)");
+        } else {
+            holder.mFoodNameTextView.setText(mFoodItems.get(position).getmFoodName());
+            holder.mCaloriesTextView.setText(String.valueOf(mFoodItems.get(position).getmCalories()));
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onFoodItemClick(holder.mItem);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**
@@ -129,7 +133,8 @@ public class MyFoodItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodIt
          */
         @Override
         public String toString() {
-            return super.toString() + " '" + mCaloriesTextView.getText() + "'";
+            return super.toString() + " '" + mFoodNameTextView.getText() + "' '"
+                    + mCaloriesTextView.getText() + "'";
         }
     }
 }

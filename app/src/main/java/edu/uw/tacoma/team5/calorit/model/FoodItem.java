@@ -119,6 +119,7 @@ public class FoodItem {
                 reason =  "Unable to parse data, Reason: " + e.getMessage();
             }
         }
+
         return reason;
     }
 

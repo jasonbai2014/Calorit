@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ import edu.uw.tacoma.team5.calorit.model.FoodItem;
 /**
  * A fragment representing a list of Items.
  *
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnFoodItemListener}
  * interface.
  */
 public class FoodItemFragment extends Fragment {
@@ -74,19 +75,8 @@ public class FoodItemFragment extends Fragment {
     /**
      * This is a listener to interaction on the fragment (ie. A FoodItem was clicked on).
      */
-    private OnListFragmentInteractionListener mListener;
+    private OnFoodItemListener mListener;
 
-    /**
-     * Button to return back to the categories list.
-     */
-    private Button mBackToCategoriesBtn;
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public FoodItemFragment() {
-    }
 
     /**
      * This method calls the super method, passing in the savedInstanceState
@@ -97,6 +87,8 @@ public class FoodItemFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Bundle bundle = getArguments();
+        mSelectedCategory = bundle.getString(MealActivity.KEY);
     }
 
     /**
@@ -112,7 +104,6 @@ public class FoodItemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
 
         View view = inflater.inflate(R.layout.fragment_fooditem_list, container, false);
 
@@ -136,7 +127,7 @@ public class FoodItemFragment extends Fragment {
             }
 
             if (mFoodList == null) {
-                mFoodList = new ArrayList<FoodItem>(); // mFoodItemDB.getFoodItems();
+                mFoodList = mFoodItemDB.getFoodItems(mSelectedCategory);
                 mFoodList.add(0, null); // for header of the recycler view
             }
 
@@ -150,14 +141,6 @@ public class FoodItemFragment extends Fragment {
 
             mRecyclerView.setAdapter(new MyFoodItemRecyclerViewAdapter(mFoodList, mListener));
         }
-
-        mBackToCategoriesBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                ((HomeActivity) getActivity()).enterMeal();
-            }
-        });
 
         return view;
     }
@@ -180,6 +163,7 @@ public class FoodItemFragment extends Fragment {
 
         return query.toString();
     }
+
 
     /**
      * Checks whether or not this app connects to the Internet
@@ -208,8 +192,8 @@ public class FoodItemFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnFoodItemListener) {
+            mListener = (OnFoodItemListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -235,11 +219,10 @@ public class FoodItemFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface OnFoodItemListener {
         //We reach here when a food item was selected.
-        void onListFragmentInteraction(FoodItem item);
+        void onFoodItemClick(FoodItem item);
     }
-
 
 
 
@@ -312,6 +295,7 @@ public class FoodItemFragment extends Fragment {
                 return;
             }
 
+
             List<FoodItem> foodItems = new ArrayList<FoodItem>();
             foodItems.add(0, null); // for header of the recycler view
             result = FoodItem.parseFoodItemJSON(result, foodItems);
@@ -336,11 +320,8 @@ public class FoodItemFragment extends Fragment {
 
                 for (int i = 1; i < foodItems.size(); i++) {
                     FoodItem foodItem = foodItems.get(i);
-
-                    //insert into SQLite db.
-
-//                    mFoodItemDB.insertCourse(log.getmLogDate(), String.valueOf(log.getmCaloriesConsumed()),
-//                            String.valueOf(log.getmCaloriesBurned()), mCurrentUser);
+                    mFoodItemDB.insertFoodItem(foodItem.getmFoodName(), foodItem.getmCategory(),
+                            foodItem.getmCalories());
                 }
             }
 

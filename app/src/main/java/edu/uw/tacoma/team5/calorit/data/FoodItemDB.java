@@ -6,6 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.uw.tacoma.team5.calorit.model.FoodItem;
+
 /**
  * Created by jason bai on 5/11/2016.
  */
@@ -24,23 +29,24 @@ public class FoodItemDB {
     public FoodItemDB(Context context) {
         mFoodItemDBHelper = new FoodItemDBHelper(context, DB_NAME, null, DB_VERSION);
         mSQLiteDatabase = mFoodItemDBHelper.getWritableDatabase();
+        mFoodItemDBHelper.onCreate(mSQLiteDatabase);
     }
 
-//    public List<FoodItem> getFoodItems(String category) {
-//        List<FoodItem> list = new ArrayList<FoodItem>();
-//        String[] columns = {"foodName", "calories"};
-//        String[] whereArgs = {category};
-//
-//        Cursor c = mSQLiteDatabase.query(TABLE_NAME, columns, "category = ?", whereArgs, null, null, null);
-//        c.moveToFirst();
-//
-//        for (int i = 0; i < c.getCount(); i++) {
-//            // TO-DO : need to create food items and add them into the list once FoodItem model class is done
-//            c.moveToNext();
-//        }
-//
-//        return list;
-//    }
+    public List<FoodItem> getFoodItems(String category) {
+        List<FoodItem> list = new ArrayList<FoodItem>();
+        String[] columns = {"foodName", "calories"};
+        String[] whereArgs = {category};
+
+        Cursor c = mSQLiteDatabase.query(TABLE_NAME, columns, "category=?", whereArgs, null, null, null);
+        c.moveToFirst();
+
+        for (int i = 0; i < c.getCount(); i++) {
+            list.add(new FoodItem(c.getString(0), category, Integer.valueOf(c.getString(1))));
+            c.moveToNext();
+        }
+
+        return list;
+    }
 
     public boolean insertFoodItem(String foodName, String category, int calories) {
         ContentValues values = new ContentValues();
@@ -64,9 +70,9 @@ public class FoodItemDB {
     private class FoodItemDBHelper extends SQLiteOpenHelper {
 
         private static final String CREATE_FOODITEM_SQL = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
-                " (foodName VARCHAR(40) PRIMARY KEY, calories INT, category VARCHAR(20))";
+                " (foodName VARCHAR(40) PRIMARY KEY, calories INT, category VARCHAR(20));";
 
-        private static final String DROP_FOODITEM_SQL = "DROP TABLE IF EXISTS " + TABLE_NAME;
+        private static final String DROP_FOODITEM_SQL = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
         public FoodItemDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
             super(context, name, factory, version);
