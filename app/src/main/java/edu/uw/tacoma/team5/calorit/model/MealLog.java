@@ -124,12 +124,12 @@ public class MealLog {
 
                     MealLog log = new MealLog(obj.getString(MealLog.LOG_DATE), Integer.valueOf(obj.getString(MealLog.CALORIES_CONSUMED)),
                             Integer.valueOf(obj.getString(MealLog.CALORIES_BURNED)));
+                    logs.add(log);
                 }
             } catch (JSONException e) {
                 reason =  "Unable to parse data, Reason: " + e.getMessage();
             }
         }
-
         return reason;
     }
 }

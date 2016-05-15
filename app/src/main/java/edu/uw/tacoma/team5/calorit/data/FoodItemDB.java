@@ -54,7 +54,7 @@ public class FoodItemDB {
         values.put("calories", calories);
         values.put("category", category);
 
-        long rows = mSQLiteDatabase.insert(TABLE_NAME, null, values);
+        long rows = mSQLiteDatabase.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 
         return rows != -1;
     }
