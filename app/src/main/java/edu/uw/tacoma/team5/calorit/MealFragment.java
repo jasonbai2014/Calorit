@@ -80,7 +80,7 @@ public class MealFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-
+                ((MealActivity) getActivity()).confirmFoodEntry();
             }
         });
 

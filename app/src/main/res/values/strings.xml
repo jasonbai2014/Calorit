@@ -40,4 +40,7 @@
     <string name="food_category_sweet">Sweets</string>
     <string name="food_category_snack">Snacks</string>
     <string name="done_btn">Done</string>
+    <string name="confirm_btn">Confirm</string>
+    <string name="undo_btn">Undo</string>
+    <string name="exercise_checkbox">Have you exercise today?</string>
 </resources>

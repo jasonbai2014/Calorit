@@ -30,7 +30,6 @@ public class BodyInfoDB {
     public BodyInfoDB(Context context) {
         mBodyInfoDBHelper = new BodyInfoDBHelper(context, DB_NAME, null, DB_VERSION);
         mSQLiteDatabase = mBodyInfoDBHelper.getWritableDatabase();
-        mBodyInfoDBHelper.onCreate(mSQLiteDatabase);
     }
 
     public boolean upsertBodyInfo(String email, int heightFeet, int heightInches, int weight,
@@ -79,7 +78,7 @@ public class BodyInfoDB {
         mSQLiteDatabase.close();
     }
 
-    private class BodyInfoDBHelper extends SQLiteOpenHelper {
+    class BodyInfoDBHelper extends SQLiteOpenHelper {
 
         private static final String CREATE_BODYINFO_SQL = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                 "(email VARCHAR(40) PRIMARY KEY, heightFeet INT, heightInches INT, weight INT,"

@@ -67,7 +67,7 @@ public class FoodItemDB {
         mSQLiteDatabase.close();
     }
 
-    private class FoodItemDBHelper extends SQLiteOpenHelper {
+    class FoodItemDBHelper extends SQLiteOpenHelper {
 
         private static final String CREATE_FOODITEM_SQL = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                 " (foodName VARCHAR(40) PRIMARY KEY, calories INT, category VARCHAR(20));";

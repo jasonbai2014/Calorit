@@ -78,21 +78,26 @@ public class MyFoodItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodIt
                         final EditText text = new EditText(holder.mView.getContext());
                         text.setInputType(InputType.TYPE_CLASS_NUMBER);
                         text.setMaxLines(1);
-                        text.setHint("Please enter amount of the food");
+                        text.setHint("Please enter amount in grams");
 
                         AlertDialog.Builder dialog = new AlertDialog.Builder(holder.mView.getContext());
-                        dialog.setTitle("Amount");
-                        dialog.setView(text, 0, 60, 0, 0);
+                        dialog.setTitle("Enter Amount");
+                        dialog.setView(text, 70, 60, 70, 20);
 
                         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // Notify the active callbacks interface (the activity, if the
                                 // fragment is attached to one) that an item has been selected.
-                                int amount = Integer.valueOf(text.getText().toString());
-                                mListener.onFoodItemClick(holder.mItem, amount);
-                                Toast.makeText(holder.mView.getContext(), "You have add " +
-                                        amount + " g of the food into the log", Toast.LENGTH_LONG).show();
+                                String info = "";
+
+                                try {
+                                    int amount = Integer.valueOf(text.getText().toString());
+                                    mListener.onFoodItemClick(holder.mItem, amount);
+                                } catch (NumberFormatException e) {
+                                    Toast.makeText(holder.mView.getContext(),
+                                            "Please enter a valid number", Toast.LENGTH_LONG).show();
+                                }
                             }
                         });
 

@@ -2,16 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    style="?android:listSeparatorTextViewStyle">
 
     <TextView
         android:id="@+id/log_date"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:textAppearance="?attr/textAppearanceListItem"/>
 
     <TextView
         android:id="@+id/calories_consumed"

@@ -88,7 +88,7 @@ public class FoodItemFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getArguments();
-        mSelectedCategory = bundle.getString(MealActivity.KEY);
+        mSelectedCategory = bundle.getString(MealActivity.CATEGORY_KEY);
     }
 
     /**

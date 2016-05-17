@@ -72,7 +72,7 @@ public class MealLogDB {
         mSQLiteDatabase.close();
     }
 
-    private class MealLogDBHelper extends SQLiteOpenHelper {
+    class MealLogDBHelper extends SQLiteOpenHelper {
 
         private static final String CREATE_MEALLOG_SQL = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                 "(id INT PRIMARY KEY, logDate DATE, caloriesConsumed INT, caloriesBurned INT, email VARCHAR(40))";
