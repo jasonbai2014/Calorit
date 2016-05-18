@@ -3,14 +3,11 @@ package edu.uw.tacoma.team5.calorit;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uw.tacoma.team5.calorit.model.ConfirmFragment;
 import edu.uw.tacoma.team5.calorit.model.FoodItem;
 
 public class MealActivity extends AppCompatActivity implements FoodItemFragment.OnFoodItemListener {

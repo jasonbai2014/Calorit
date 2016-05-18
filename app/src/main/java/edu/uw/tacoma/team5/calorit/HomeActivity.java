@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,7 +39,16 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            int mealData = intent.getIntExtra(ConfirmFragment.MEAL_DATA_KEY, 0);
             HomeFragment homeFragment = new HomeFragment();
+
+            if (mealData != 0) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(ConfirmFragment.MEAL_DATA_KEY, mealData);
+                homeFragment.setArguments(bundle);
+            }
+
             getSupportFragmentManager().beginTransaction().add(R.id.home_activity,
                     homeFragment).commit();
         }
@@ -47,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
     public void enterMeal() {
         Intent i = new Intent(this, MealActivity.class);
         startActivity(i);
+        finish();
     }
 
     /**

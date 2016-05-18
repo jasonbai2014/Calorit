@@ -33,7 +33,7 @@ public class MealLogDB {
         mMealLogDBHelper.onCreate(mSQLiteDatabase);
     }
 
-    public boolean insertCourse(String logDate, String caloriesConsumed, String caloriesBurned, String email) {
+    public boolean insertMealLog(String logDate, String caloriesConsumed, String caloriesBurned, String email) {
         ContentValues values = new ContentValues();
         values.put("logDate", logDate);
         values.put("caloriesConsumed", caloriesConsumed);
@@ -43,6 +43,42 @@ public class MealLogDB {
         long rows = mSQLiteDatabase.insert(TABLE_NAME, null, values);
 
         return rows != -1;
+    }
+
+    public void updateMealLog(String logDate, String caloriesConsumed, String caloriesBurned, String email) {
+        String[] columns = {"caloriesConsumed", "caloriesBurned"};
+        String[] whereArgs = {email, logDate};
+
+        Cursor c = mSQLiteDatabase.query(TABLE_NAME, columns, "email = ? AND logDate = ?", whereArgs, null, null, null);
+
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            caloriesConsumed = String.valueOf(Integer.valueOf(caloriesConsumed) + Integer.valueOf(c.getString(0)));
+            caloriesBurned = String.valueOf(Integer.valueOf(caloriesBurned) + Integer.valueOf(c.getString(1)));
+
+            ContentValues values = new ContentValues();
+            values.put("caloriesConsumed", caloriesConsumed);
+            values.put("caloriesBurned", caloriesBurned);
+            mSQLiteDatabase.update(TABLE_NAME, values, "email = ? AND logDate = ?", whereArgs);
+        } else {
+            insertMealLog(logDate, caloriesConsumed, caloriesBurned, email);
+        }
+    }
+
+    public MealLog getMealLogByDate(String email, String date) {
+        String[] columns = {"logDate", "caloriesConsumed", "caloriesBurned"};
+        String[] whereArgs = {email};
+
+        Cursor c = mSQLiteDatabase.query(TABLE_NAME, columns, "email = ?", whereArgs, null, null, "logDate");
+        c.moveToFirst();
+
+        MealLog result = null;
+
+        if (c.getCount() > 0) {
+            result = new MealLog(c.getString(0), Integer.valueOf(c.getString(1)), Integer.valueOf(c.getString(2)));
+        }
+
+        return result;
     }
 
     public List<MealLog> getMealLog(String email) {

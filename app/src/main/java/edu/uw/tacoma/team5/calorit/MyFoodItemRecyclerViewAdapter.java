@@ -75,13 +75,13 @@ public class MyFoodItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodIt
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        final EditText text = new EditText(holder.mView.getContext());
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(holder.mView.getContext());
+                        dialog.setMessage("Enter amount in grams");
+
+                        final EditText text = new EditText(dialog.getContext());
                         text.setInputType(InputType.TYPE_CLASS_NUMBER);
                         text.setMaxLines(1);
-                        text.setHint("Please enter amount in grams");
 
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(holder.mView.getContext());
-                        dialog.setTitle("Enter Amount");
                         dialog.setView(text, 70, 60, 70, 20);
 
                         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {

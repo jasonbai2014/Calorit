@@ -256,7 +256,7 @@ public class MealLogFragment extends Fragment {
 
                 for (int i = 1; i < mealLog.size(); i++) {
                     MealLog log = mealLog.get(i);
-                    mMealLogDB.insertCourse(log.getmLogDate(), String.valueOf(log.getmCaloriesConsumed()),
+                    mMealLogDB.insertMealLog(log.getmLogDate(), String.valueOf(log.getmCaloriesConsumed()),
                             String.valueOf(log.getmCaloriesBurned()), mCurrentUser);
                 }
             }

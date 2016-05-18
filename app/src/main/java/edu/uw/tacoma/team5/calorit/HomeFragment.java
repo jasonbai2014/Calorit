@@ -21,9 +21,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import edu.uw.tacoma.team5.calorit.data.BodyInfoDB;
+import edu.uw.tacoma.team5.calorit.data.MealLogDB;
 import edu.uw.tacoma.team5.calorit.model.BodyInfo;
+import edu.uw.tacoma.team5.calorit.model.MealLog;
 
 /**
  * This is a fragment for home UI.
@@ -98,8 +102,18 @@ public class HomeFragment extends Fragment {
             DownloadBodyInfoTask task = new DownloadBodyInfoTask();
             task.execute(buildURL());
         } else {
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            MealLog log = new MealLogDB(getActivity()).getMealLogByDate(mCurrentUser,
+                    format.format(c.getTime()));
             BodyInfo info = mBodyInfoDB.getBodyInfo(mCurrentUser);
-            mCaloriesTextView.setText(info.getBmr() + " Calories");
+
+            if (log != null) {
+                mCaloriesTextView.setText(info.getBmr() - log.getmCaloriesConsumed()
+                        + log.getmCaloriesBurned() + " Calories");
+            } else {
+                mCaloriesTextView.setText(info.getBmr() + " Calories");
+            }
         }
 
         mEnterMealBtn.setOnClickListener(new View.OnClickListener() {
@@ -222,7 +236,25 @@ public class HomeFragment extends Fragment {
                         .show();
                 return;
             } else {
-                mCaloriesTextView.setText(info.getBmr() + " Calories");
+                Bundle bundle = getArguments();
+
+                if (bundle != null) {
+                    int mealData = bundle.getInt(ConfirmFragment.MEAL_DATA_KEY, 0);
+                    mCaloriesTextView.setText((info.getBmr() - mealData) + " Calories");
+                } else {
+                    Calendar c = Calendar.getInstance();
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    MealLog log = new MealLogDB(getActivity()).getMealLogByDate(mCurrentUser,
+                            format.format(c.getTime()));
+
+                    if (log != null) {
+                        mCaloriesTextView.setText(info.getBmr() - log.getmCaloriesConsumed()
+                                + log.getmCaloriesBurned() +  " Calories");
+                    } else {
+                        mCaloriesTextView.setText(info.getBmr() + " Calories");
+                    }
+                }
+
                 mBodyInfoDB.upsertBodyInfo(mCurrentUser, info.getHeightFeet(),
                         info.getHeightInches(),info.getWeight(),
                         info.getAge(), info.getGender(), info.getBmr());
