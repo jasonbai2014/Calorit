@@ -54,6 +54,9 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This allows user to enter food items he/she eats in a meal
+     */
     public void enterMeal() {
         Intent i = new Intent(this, MealActivity.class);
         startActivity(i);

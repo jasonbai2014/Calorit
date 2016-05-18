@@ -74,6 +74,9 @@ public class HomeFragment extends Fragment {
      */
     private Button mMealLogBtn;
 
+    /**
+     * This is a SQLite database instance used to handle body information
+     */
     private BodyInfoDB mBodyInfoDB;
 
     /**

@@ -57,8 +57,14 @@ public class BodyInfoActivity extends AppCompatActivity {
      */
     private Button mSaveBodyInfoButton;
 
+    /**
+     * These are spinners used to get user's body information
+     */
     private Spinner mHeightFeetSpinner, mHeightInchesSpinner, mWeightSpinner, mAgeSpinner;
 
+    /**
+     * This is a radio button for user's gender information
+     */
     private RadioGroup mGenderRadioGroup;
 
     /**
@@ -81,6 +87,9 @@ public class BodyInfoActivity extends AppCompatActivity {
      */
     private SharedPreferences mSharedPreferences;
 
+    /**
+     * This is user's email address
+     */
     private String mCurrentUser;
 
     /**
@@ -119,6 +128,12 @@ public class BodyInfoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This creates an array adapter for the spinners
+     *
+     * @param num determines how many numbers are in the adapter
+     * @return array adapter
+     */
     private ArrayAdapter createArrayAdapter(int num) {
         List<Integer> list = new ArrayList<Integer>();
 
@@ -131,7 +146,12 @@ public class BodyInfoActivity extends AppCompatActivity {
         return adapter;
     }
 
-
+    /**
+     * This gets selected number from the spinners
+     *
+     * @param spinner is spinner
+     * @return an integer selected by user
+     */
     private int parseSpinnerData(Spinner spinner) {
         TextView view = (TextView) spinner.getSelectedView();
         return Integer.valueOf(view.getText().toString());

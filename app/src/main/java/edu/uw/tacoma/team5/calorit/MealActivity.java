@@ -10,14 +10,36 @@ import java.util.List;
 
 import edu.uw.tacoma.team5.calorit.model.FoodItem;
 
+/**
+ * This is an activity that handles functions allowing a user to select foods and upload data
+ * to a server
+ *
+ * Qing Bai
+ * Levi Bingham
+ * 2016/05/17
+ */
 public class MealActivity extends AppCompatActivity implements FoodItemFragment.OnFoodItemListener {
 
+    /**
+     * This is a key used to get selected category from a bundle
+     */
     public static String CATEGORY_KEY = "edu.uw.tacoma.team5.calorit.MealActivity_category";
 
+    /**
+     * This is a list that holds all food selected by a user
+     */
     private List<FoodItem> mSelectedFood;
 
+    /**
+     * This is a list that contains amount of each food item selected by a user
+     */
     private List<Integer> mFoodAmount;
 
+    /**
+     * This starts this activity with MealFragment
+     *
+     * @param savedInstanceState is savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +51,11 @@ public class MealActivity extends AppCompatActivity implements FoodItemFragment.
         manager.beginTransaction().add(R.id.meal_activity_layout, new MealFragment()).commit();
     }
 
+    /**
+     * This allows a user to select food from a selected food category
+     *
+     * @param category is selected food category
+     */
     public void categorySelected(String category) {
         FragmentManager manager = getSupportFragmentManager();
         FoodItemFragment fragment = new FoodItemFragment();
@@ -39,6 +66,9 @@ public class MealActivity extends AppCompatActivity implements FoodItemFragment.
                 addToBackStack(null).commit();
     }
 
+    /**
+     * This brings user to a fragment UI where the user can confirm food items he/she has selected
+     */
     public void confirmFoodEntry() {
         if (mFoodAmount.size() > 0) {
             FragmentManager manager = getSupportFragmentManager();
@@ -48,6 +78,12 @@ public class MealActivity extends AppCompatActivity implements FoodItemFragment.
         }
     }
 
+    /**
+     * This adds selected food to the list containing selected food items
+     *
+     * @param item is selected food item
+     * @param amount is amount of food item in gram
+     */
     @Override
     public void onFoodItemClick(FoodItem item, int amount) {
         if (!mSelectedFood.contains(item)) {
@@ -61,11 +97,19 @@ public class MealActivity extends AppCompatActivity implements FoodItemFragment.
         }
     }
 
+    /**
+     * This clear the lists that contain food items and their amounts
+     */
     public void reset() {
         mSelectedFood.clear();
         mFoodAmount.clear();
     }
 
+    /**
+     * This returns a copy of the list of food items
+     *
+     * @return a copy of the list
+     */
     public List<FoodItem> getSelectedFoodItems() {
         List<FoodItem> copy = new ArrayList<FoodItem>();
         FoodItem selectedItem = null;
@@ -79,6 +123,11 @@ public class MealActivity extends AppCompatActivity implements FoodItemFragment.
         return copy;
     }
 
+    /**
+     * This returns a copy of the list of food amounts
+     *
+     * @return a copy of the list
+     */
     public List<Integer> getSelectedAmounts() {
         List<Integer> copy = new ArrayList<Integer>();
 

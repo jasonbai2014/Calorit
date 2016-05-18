@@ -1,6 +1,5 @@
 package edu.uw.tacoma.team5.calorit;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,14 +7,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-
 /**
- * A simple {@link Fragment} subclass.
+ * This is a fragment UI showing a list of buttons that allow user to select different food categories.
+ *
+ * Qing Bai
+ * Levi Bingham
+ * 2016/05/17
  */
 public class MealFragment extends Fragment {
 
+    /**
+     * This is a list of buttons shown in this fragment
+     */
     private Button mCarbBtn, mFruitVeggieBtn, mDairyBtn, mMeatBtn, mSweetBtn, mSnackBtn, mDoneBtn;
 
+    /**
+     * This sets up listeners for the buttons
+     *
+     * @param inflater is inflater
+     * @param container is container
+     * @param savedInstanceState is savedInstanceState
+     * @return view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

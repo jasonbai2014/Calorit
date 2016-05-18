@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,28 +46,67 @@ import edu.uw.tacoma.team5.calorit.data.MealLogDB;
 import edu.uw.tacoma.team5.calorit.model.FoodItem;
 
 /**
- * A simple {@link Fragment} subclass.
+ * This is a fragment used to let user confirm food items he/she has selected
+ *
+ * Qing Bai
+ * Levi Bingham
+ * 2016/05/17
  */
 public class ConfirmFragment extends Fragment {
 
+    /**
+     * This is a key used to get net calories user has taken in a meal from an intent
+     */
     public static final String MEAL_DATA_KEY = "edu.uw.tacoma.team5.calorit_MEAL_DATA_KEY";
 
+    /**
+     * This is a url used to communicate with the server
+     */
     private static final String MEAL_LOG_URL = "http://cssgate.insttech.washington.edu/~_450atm5/updateMealLog.php?";
 
+    /**
+     * SharedPreferences object used to get the current user's email address to build a URL.
+     */
     private SharedPreferences mSharedPreferences;
 
+    /**
+     * This is user's email address
+     */
     private String mCurrentUser;
 
+    /**
+     * This is a list of food selected by user
+     */
     private List<FoodItem> mSelectedFoods;
 
+    /**
+     * This contains a list of integers for amount of each food selected by user
+     */
     private List<Integer> mSelectedAmounts;
 
+    /**
+     * This is a date when user confirms the data
+     */
     private String mDate;
 
+    /**
+     * This is amount of calories user burns
+     */
     private int mCaloriesBurned;
 
+    /**
+     * This is amount of calories user consumes
+     */
     private int mCaloriesConsumed;
 
+    /**
+     * This creates views in this fragment programmatically and sets up their listeners
+     *
+     * @param inflater is inflater
+     * @param container is container
+     * @param savedInstanceState is savedInstanceState
+     * @return view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -180,6 +218,11 @@ public class ConfirmFragment extends Fragment {
         return v;
     }
 
+    /**
+     * This calculates total calories of the food selected by user
+     *
+     * @return total calories consumed by user
+     */
     private int calculateSelectedFoodCalories() {
         double result = 0;
 
