@@ -115,9 +115,10 @@ public class MealLogDB {
      */
     public MealLog getMealLogByDate(String email, String date) {
         String[] columns = {"logDate", "caloriesConsumed", "caloriesBurned"};
-        String[] whereArgs = {email};
+        String[] whereArgs = {email, date};
 
-        Cursor c = mSQLiteDatabase.query(TABLE_NAME, columns, "email = ?", whereArgs, null, null, "logDate");
+        Cursor c = mSQLiteDatabase.query(TABLE_NAME, columns, "email = ? AND logDate = ?",
+                whereArgs, null, null, "logDate");
         c.moveToFirst();
 
         MealLog result = null;
