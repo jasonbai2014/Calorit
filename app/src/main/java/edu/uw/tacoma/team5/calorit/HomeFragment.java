@@ -125,8 +125,10 @@ public class HomeFragment extends Fragment {
         mBodyInfoDB = new BodyInfoDB(getActivity());
 
         //if the user has reached or exceeded their daily calorie limit.
-        if(Integer.parseInt(mCaloriesTextView.getText().toString()) <= 0){
-            sendMail(mCurrentUser, EMAIL_SUBJECT, EMAIL_BODY);
+        if(!mCaloriesTextView.getText().equals("")) {
+            if (Integer.parseInt(mCaloriesTextView.getText().toString()) <= 0) {
+                sendMail(mCurrentUser, EMAIL_SUBJECT, EMAIL_BODY);
+            }
         }
 
         if (isConnectedToNetwork()) {
