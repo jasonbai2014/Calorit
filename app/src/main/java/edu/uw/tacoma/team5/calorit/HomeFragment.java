@@ -18,11 +18,23 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Properties;
+
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import edu.uw.tacoma.team5.calorit.data.BodyInfoDB;
 import edu.uw.tacoma.team5.calorit.data.MealLogDB;
@@ -43,13 +55,23 @@ public class HomeFragment extends Fragment {
     private static final String BODY_INFO_URL = "http://cssgate.insttech.washington.edu/~_450atm5/querybodyinfo.php?";
 
     /**
+     * This is a String for the Email subject.
+     */
+    private final String EMAIL_SUBJECT = "Calorit Alerts";
+
+    /**
+     * This is a String for the email message
+     */
+    private final String EMAIL_BODY = "You've reached your daily calorie limit!";
+
+    /**
      * SharedPreferences object used for knowing if the user is logged in and it also has user's
      * email.
      */
     private SharedPreferences mSharedPerferences;
 
     /**
-     * String used to store the current user's email for URL building
+     * String used to store the current user's email for URL building & email sending
      */
     private String mCurrentUser;
 
@@ -79,6 +101,7 @@ public class HomeFragment extends Fragment {
      */
     private BodyInfoDB mBodyInfoDB;
 
+
     /**
      * Gets the user's email and stores it in the mCurrentUser field. Assigns the fragment's UI elements to the
      * relevant fields. Also starts a background task after building a URL to download this user's body information.
@@ -100,6 +123,11 @@ public class HomeFragment extends Fragment {
         mEditBodyInfoBtn = (Button) view.findViewById(R.id.edit_body_info_btn);
         mMealLogBtn = (Button) view.findViewById(R.id.meal_log_btn);
         mBodyInfoDB = new BodyInfoDB(getActivity());
+
+        //if the user has reached or exceeded their daily calorie limit.
+        if(Integer.parseInt(mCaloriesTextView.getText().toString()) <= 0){
+            sendMail(mCurrentUser, EMAIL_SUBJECT, EMAIL_BODY);
+        }
 
         if (isConnectedToNetwork()) {
             DownloadBodyInfoTask task = new DownloadBodyInfoTask();
@@ -186,6 +214,46 @@ public class HomeFragment extends Fragment {
         mBodyInfoDB.closeDB();
     }
 
+    private Session createSessionObject() {
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "587");
+
+        return Session.getInstance(properties, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("tcss450ateam5@gmail.com", "team5password");
+            }
+        });
+    }
+
+    private Message createMessage(String email, String subject, String messageBody, Session session)
+            throws MessagingException, UnsupportedEncodingException {
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress("tcss450ateam5@gmail.com", "Team 5"));
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(email, email));
+        message.setSubject(subject);
+        message.setText(messageBody);
+        return message;
+    }
+
+    private void sendMail(String email, String subject, String messageBody) {
+        Session session = createSessionObject();
+
+        try {
+            Message message = createMessage(email, subject, messageBody, session);
+            new SendMailTask().execute(message);
+        } catch (AddressException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * Class for background task of downloading body info on a different thread.
      */
@@ -264,4 +332,29 @@ public class HomeFragment extends Fragment {
             }
         }
     }
+
+
+    private class SendMailTask extends AsyncTask<Message, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected Void doInBackground(Message... messages) {
+            try {
+                Transport.send(messages[0]);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 }
