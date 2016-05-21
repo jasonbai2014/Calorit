@@ -214,6 +214,11 @@ public class HomeFragment extends Fragment {
         mBodyInfoDB.closeDB();
     }
 
+    /**
+     * Creates a new Session with Simple Mail Transfer Protocol to send an email.
+     *
+     * @return Instances of this new Session.
+     */
     private Session createSessionObject() {
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
@@ -228,6 +233,17 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    /**
+     * Creates a message to be sent.
+     *
+     * @param email Destination email.
+     * @param subject Email subject.
+     * @param messageBody Message within in the email.
+     * @param session Session on the smtp service used to actually send the email.
+     * @return Instances of the message to be sent.
+     * @throws MessagingException If there is a problem with the message itself.
+     * @throws UnsupportedEncodingException If there is an issue encoding the message to send.
+     */
     private Message createMessage(String email, String subject, String messageBody, Session session)
             throws MessagingException, UnsupportedEncodingException {
         Message message = new MimeMessage(session);
@@ -238,6 +254,13 @@ public class HomeFragment extends Fragment {
         return message;
     }
 
+    /**
+     * Creates a message to be sent, then sends that to the SendMailTask class to do so on a separate
+     * thread.
+     * @param email Destination email address.
+     * @param subject Subject of the email.
+     * @param messageBody Message within the email.
+     */
     private void sendMail(String email, String subject, String messageBody) {
         Session session = createSessionObject();
 
@@ -334,6 +357,10 @@ public class HomeFragment extends Fragment {
     }
 
 
+    /**
+     * This class sends an email to the current user on a separate thread to allow the user to be
+     * notified of their calorie limit for the day without having to wait for the email to send.
+     */
     private class SendMailTask extends AsyncTask<Message, Void, Void> {
 
         @Override
@@ -345,6 +372,7 @@ public class HomeFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
         }
+
 
         @Override
         protected Void doInBackground(Message... messages) {

@@ -36,14 +36,28 @@ public class FoodItem {
 
     /**
      * Constructor for FoodItem
+     *
      * @param mFoodName the name to assign to this FoodItem.
      * @param mCategory the category that this FoodItem is in.
      * @param mCalories the number of calories 100g of this FoodItem has.
      */
     public FoodItem(String mFoodName, String mCategory, int mCalories) {
-        this.mFoodName = mFoodName;
-        this.mCategory = mCategory;
-        this.mCalories = mCalories;
+        if (mFoodName == null) {
+            throw new IllegalArgumentException("Food Name can not be null");
+        } else {
+            this.mFoodName = mFoodName;
+        }
+        if (mCategory == null) {
+            throw new IllegalArgumentException("Food Category can not be null");
+        } else {
+            this.mCategory = mCategory;
+        }
+        if (mCalories < 0) {
+            throw new IllegalArgumentException("Food calories can not be negative");
+        } else {
+            this.mCalories = mCalories;
+        }
+
     }
 
     /**
@@ -59,7 +73,11 @@ public class FoodItem {
      * @param mFoodName String representation that will be assigned to this FoodItem's name.
      */
     public void setmFoodName(String mFoodName) {
-        this.mFoodName = mFoodName;
+        if (mFoodName == null) {
+            throw new IllegalArgumentException("Food Name can not be null");
+        } else {
+            this.mFoodName = mFoodName;
+        }
     }
 
     /**
@@ -75,7 +93,11 @@ public class FoodItem {
      * @param mCategory String representation that will be assigned to the FoodItem's category.
      */
     public void setmCategory(String mCategory) {
-        this.mCategory = mCategory;
+        if (mCategory == null) {
+            throw new IllegalArgumentException("Food Category can not be null");
+        } else {
+            this.mCategory = mCategory;
+        }
     }
 
     /**
@@ -91,7 +113,11 @@ public class FoodItem {
      * @param mCalories integer representing how many calories 100g of this FoodItem has.
      */
     public void setmCalories(int mCalories) {
-        this.mCalories = mCalories;
+        if (mCalories < 0) {
+            throw new IllegalArgumentException("Food calories can not be negative");
+        } else {
+            this.mCalories = mCalories;
+        }
     }
 
     /**
