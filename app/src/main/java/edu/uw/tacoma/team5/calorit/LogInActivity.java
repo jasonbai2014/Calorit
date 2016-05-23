@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -176,8 +177,8 @@ public class LogInActivity extends AppCompatActivity {
         } else if (!email.contains("@")) {
             Toast.makeText(this, "Please enter a valid email.", Toast.LENGTH_LONG).show();
             result = false;
-        } else if (email.length() > 40) {
-            Toast.makeText(this, "Please enter a valid email (less than fourty characters).",
+        } else if (email.length() > 20) {
+            Toast.makeText(this, "Please enter a valid email (less than 20 characters).",
                     Toast.LENGTH_LONG).show();
             result = false;
         } else if (TextUtils.isEmpty(password)) {
@@ -188,7 +189,7 @@ public class LogInActivity extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
             result = false;
         } else if (password.length() < 10) {
-            Toast.makeText(this, "Please enter a valid password (more than 10 characters).",
+            Toast.makeText(this, "Please enter a valid password (more than 10 characters)",
                     Toast.LENGTH_LONG).show();
             result = false;
         }

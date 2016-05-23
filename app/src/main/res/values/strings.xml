@@ -6,7 +6,7 @@
     <string name="sign_up_password_hint">Password (at least 10 characters)</string>
     <string name="confirm_password_hint">Confirm your password</string>
     <string name="sign_in_btn">Sign In</string>
-    <string name="sign_up_btn">Sign up</string>
+    <string name="sign_up_btn">Sign Up</string>
     <string name="create_account_btn">Create Account</string>
     <string name="login_prefs">edu.uw.tacoma.team5.calorit.prefs</string>
     <string name="loggedin">loggedin</string>
